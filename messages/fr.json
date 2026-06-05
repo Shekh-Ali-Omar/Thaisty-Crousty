@@ -1,0 +1,280 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "menu": "Menu",
+    "cart": "Panier",
+    "profile": "Profil",
+    "about": "À propos",
+    "contact": "Contact",
+    "location": "Lieu",
+    "faq": "FAQ"
+  },
+  "home": {
+    "title": "Thaisty Crousty",
+    "subtitle": "Dely Ibrahim — Street food, maxi goût",
+    "cta": "Commander",
+    "featured": "Nos best-sellers",
+    "hero": {
+      "premium": "Dely Ibrahim",
+      "title": "Goûtez au Premium.",
+      "ourStory": "Notre Histoire",
+      "fastDelivery": "Livraison Rapide",
+      "under30": "Moins de 30 Min"
+    },
+    "whyUs": {
+      "title": "Nos best-sellers",
+      "recipes": {
+        "title": "Recettes Uniques",
+        "desc": "Mélanges secrets d'épices et techniques artisanales que vous ne trouverez nulle part ailleurs."
+      },
+      "service": {
+        "title": "Service Flash",
+        "desc": "Premium ne veut pas dire lent. Nous livrons un goût haut de gamme en un temps record."
+      },
+      "quality": {
+        "title": "Qualité Élite",
+        "desc": "Ingrédients 100% frais et locaux pour le croustillant et la saveur ultimes."
+      }
+    },
+    "testimonials": {
+      "title": "Ce que disent nos fans",
+      "reviews": [
+        {
+          "name": "Yanis K.",
+          "text": "Le meilleur crousty mix d'Alger. La sauce est vraiment addictive !"
+        },
+        {
+          "name": "Amine S.",
+          "text": "Vraie street food premium. La présentation est aussi bonne que le goût."
+        }
+      ]
+    }
+  },
+  "menu": {
+    "title": "Menu",
+    "all": "Tout",
+    "add": "Ajouter",
+    "unavailable": "Indisponible",
+    "empty": "Aucun produit dans cette catégorie",
+    "search": "Recherchez nos saveurs...",
+    "filter": "Filtrer par catégorie",
+    "itemsCount": "articles exquis disponibles pour vous",
+    "clearFilters": "Effacer tous les filtres",
+    "viewAll": "Voir tout le menu",
+    "categories": {
+      "all": "Tout",
+      "crousty": "Crousty",
+      "spicy": "Spicy",
+      "sweet": "Sweet",
+      "drink": "Boissons"
+    }
+  },
+  "about": {
+    "legacy": "Notre Héritage",
+    "title": "Une Histoire de Passion & de Croustillant.",
+    "desc": "Né au cœur de Dely Ibrahim, Thaisty Crousty a été créé pour redéfinir la street food. Nous pensons que les repas rapides ne devraient jamais faire de compromis sur la qualité, le style ou l'âme.",
+    "recipe": {
+      "title": "La Recette Originale",
+      "desc": "Perfectionnée après 3 ans de tests."
+    },
+    "ingredients": {
+      "title": "Ingrédients d'Élite",
+      "desc": "100% frais, 100% locaux."
+    },
+    "values": {
+      "love": {
+        "title": "Confectionné avec Amour",
+        "desc": "Chaque burger, chaque dessert est fait comme s'il était pour notre propre famille."
+      },
+      "premium": {
+        "title": "Uniquement Premium",
+        "desc": "Du pain à l'emballage, nous n'utilisons que les meilleurs matériaux disponibles."
+      },
+      "vision": {
+        "title": "Vision Culinaire",
+        "desc": "Innover constamment de nouvelles saveurs pour garder vos papilles en éveil."
+      }
+    },
+    "cta": {
+      "title": "Prêt à rejoindre l'élite ?",
+      "desc": "Découvrez le croustillant dont tout le monde parle. Votre expérience premium est à portée de clic.",
+      "button": "Explorer notre Menu"
+    },
+    "quote": "La qualité n'est pas un acte, c'est une habitude."
+  },
+  "contact": {
+    "title": "Contactez-nous.",
+    "subtitle": "Une question ou un commentaire ? Nous sommes là pour vous écouter et mieux vous servir.",
+    "callUs": "Appelez-nous",
+    "whatsapp": "WhatsApp",
+    "hours": "Heures d'ouverture",
+    "hoursVal": "Tous les jours : 11h00 - 23h00",
+    "location": "Notre Emplacement",
+    "locationVal": "Rue 11 Décembre 1960, Dely Ibrahim, Alger",
+    "form": {
+      "name": "Votre Nom",
+      "email": "Votre Email",
+      "subject": "Sujet",
+      "message": "Message",
+      "send": "Envoyer le Message",
+      "placeholders": {
+        "name": "Jean Dupont",
+        "email": "jean@example.com",
+        "subject": "De quoi s'agit-il ?",
+        "message": "Écrivez vos pensées ici..."
+      }
+    },
+    "mapLoading": "Chargement de la carte interactive..."
+  },
+  "location": {
+    "title": "Au Cœur de Dely Ibrahim.",
+    "directions": "Obtenir l'itinéraire",
+    "parking": {
+      "title": "Parking",
+      "desc": "Un grand parking gratuit est disponible directement devant le restaurant et dans le parking sécurisé adjacent."
+    },
+    "delivery": {
+      "title": "Zones de Livraison",
+      "desc": "Nous livrons à Dely Ibrahim, Cheraga, Ouled Fayet et El Biar. Temps de livraison typique : 25-40 min."
+    },
+    "hours": {
+      "title": "Heures de Visite",
+      "desc": "Ouvert tous les jours de 11h00 à 23h00. Le week-end, nous restons ouverts jusqu'à minuit pour les envies nocturnes."
+    },
+    "follow": "Suivez notre aventure"
+  },
+  "faq": {
+    "title": "Questions Fréquemment Posées.",
+    "supportTag": "Support",
+    "questions": [
+      {
+        "q": "Où se trouve Thaisty Crousty ?",
+        "a": "Nous sommes situés au cœur de Dely Ibrahim, Alger. Notre adresse exacte est Rue 11 Décembre 1960. Vous trouverez une carte interactive sur notre page Lieu."
+      },
+      {
+        "q": "Quelles sont vos heures d'ouverture ?",
+        "a": "Nous sommes ouverts tous les jours de 11h00 à 23h00. Le week-end, nous restons souvent ouverts jusqu'à minuit pour satisfaire vos envies tardives."
+      },
+      {
+        "q": "Comment puis-je passer une commande ?",
+        "a": "Vous pouvez parcourir notre menu, ajouter des articles à votre panier et commander directement sur notre site. La commande finale est envoyée via WhatsApp à notre cuisine pour une préparation immédiate."
+      },
+      {
+        "q": "Proposez-vous la livraison ?",
+        "a": "Oui, nous proposons une livraison rapide à Dely Ibrahim et dans les zones environnantes, notamment Cheraga et Ouled Fayet. La livraison est généralement gratuite pour les commandes dépassant un certain montant."
+      },
+      {
+        "q": "Vos ingrédients sont-ils frais ?",
+        "a": "Absolument. Nous sommes fiers d'utiliser des ingrédients 100% frais et locaux. Notre viande est préparée quotidiennement et nos légumes sont livrés chaque matin."
+      },
+      {
+        "q": "Avez-vous des options végétariennes ?",
+        "a": "Oui ! Bien que nous soyons célèbres pour nos viandes 'Crousty', nous avons une sélection de délicieux desserts et pouvons personnaliser certains articles pour qu'ils soient végétariens. Recherchez la catégorie 'Sweet' dans notre menu."
+      }
+    ],
+    "more": {
+      "title": "Vous avez encore des questions ?",
+      "desc": "Vous ne trouvez pas la réponse que vous cherchez ? Contactez notre équipe amicale sur WhatsApp.",
+      "button": "Contacter le Support"
+    }
+  },
+  "footer": {
+    "brandDesc": "Découvrez la meilleure street food à Dely Ibrahim. Confectionnée avec passion, servie avec style.",
+    "support": "Support",
+    "visit": "Visitez-nous",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "open": "Cuisine Ouverte",
+    "handcrafted": "Fait main par Premium Media",
+    "rights": "Tous droits réservés."
+  },
+  "cart": {
+    "title": "Votre panier",
+    "empty": "Votre panier est vide",
+    "emptySubtitle": "Ajoutez un peu de croustillant premium à votre journée.",
+    "total": "Total",
+    "checkout": "Commander",
+    "remove": "Retirer",
+    "note": "Note",
+    "notePlaceholder": "Sauce en plus, sans oignons…",
+    "viewCart": "Voir le panier",
+    "items": "articles",
+    "summary": "Récapitulatif de la commande",
+    "subtotal": "Sous-total",
+    "delivery": "Livraison",
+    "deliveryFree": "Gratuit",
+    "review": "Vérifiez votre sélection",
+    "secure": "Paiement sécurisé via WhatsApp"
+  },
+  "checkout": {
+    "title": "Commande",
+    "subtitle": "Finalisez votre expérience premium",
+    "stepInfo": "Infos",
+    "stepReview": "Récap",
+    "stepConfirm": "Confirmer",
+    "name": "Nom complet",
+    "phone": "Téléphone",
+    "address": "Adresse de livraison",
+    "notes": "Notes de commande",
+    "confirm": "Confirmer la commande",
+    "back": "Retour",
+    "review": "Vérifier la commande",
+    "placing": "Envoi en cours…",
+    "deliveryInfo": "Informations de livraison",
+    "customer": "Client",
+    "orderDetails": "Détails de la commande",
+    "qty": "Qté",
+    "finalConfirm": "Confirmation Finale",
+    "finalDesc": "Votre commande sera envoyée à notre cuisine via WhatsApp. N'oubliez pas d'appuyer sur \"Envoyer\" à l'étape suivante.",
+    "sendWhatsapp": "Envoyer la commande sur WhatsApp",
+    "errors": {
+      "name": "Le nom est requis",
+      "phone": "Téléphone valide requis",
+      "address": "L'adresse est requise"
+    }
+  },
+  "whatsapp": {
+    "newOrder": "Nouvelle commande",
+    "items": "Articles",
+    "total": "Total",
+    "name": "Nom",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "notes": "Notes"
+  },
+  "profile": {
+    "title": "Profil",
+    "language": "Langue",
+    "admin": "Tableau de bord admin"
+  },
+  "admin": {
+    "login": "Connexion admin",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "signOut": "Déconnexion",
+    "dashboard": "Tableau de bord",
+    "products": "Produits",
+    "orders": "Commandes",
+    "addProduct": "Ajouter un produit",
+    "editProduct": "Modifier le produit",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "name": "Nom",
+    "price": "Prix (DA)",
+    "category": "Catégorie",
+    "available": "Disponible",
+    "image": "Image",
+    "status": "Statut",
+    "orderDetails": "Détails commande",
+    "noOrders": "Aucune commande"
+  },
+  "common": {
+    "loading": "Chargement…",
+    "error": "Une erreur est survenue",
+    "premium": "Premium",
+    "instagram": "Instagram",
+    "facebook": "Facebook"
+  }
+}

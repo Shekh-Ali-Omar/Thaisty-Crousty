@@ -1,26 +1,156 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050505;
+  --glass-4: rgba(255, 255, 255, 0.04);
+  --glass-8: rgba(255, 255, 255, 0.08);
+  --glass-12: rgba(255, 255, 255, 0.12);
+  --primary: #ff8c00;
+  --primary-secondary: #ffb347;
+  --foreground: #ffffff;
+  --muted: #a3a3a3;
+  --radius: 20px;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-glass-4: var(--glass-4);
+  --color-glass-8: var(--glass-8);
+  --color-glass-12: var(--glass-12);
+  --color-primary: var(--primary);
+  --color-primary-secondary: var(--primary-secondary);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --font-sans: var(--font-inter);
+  --font-arabic: var(--font-cairo);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+html[dir="rtl"] body {
+  font-family: var(--font-cairo), var(--font-inter), system-ui, sans-serif;
+}
+
+/* Ambient mesh background with animated orbs */
+.mesh-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: 
+    radial-gradient(circle at 10% 10%, rgba(255, 140, 0, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 90% 10%, rgba(255, 179, 71, 0.08) 0%, transparent 35%),
+    radial-gradient(circle at 50% 90%, rgba(255, 140, 0, 0.05) 0%, transparent 50%),
+    #050505;
+}
+
+/* Luxury glass surfaces */
+.glass {
+  background: var(--glass-4);
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 4px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.glass-strong {
+  background: var(--glass-8);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 12px 48px rgba(0, 0, 0, 0.6),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.glass-premium {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(60px) saturate(2);
+  -webkit-backdrop-filter: blur(60px) saturate(2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* Glow Systems */
+.glass-glow {
+  box-shadow: 
+    0 0 0 1px rgba(255, 140, 0, 0.2),
+    0 8px 32px rgba(255, 140, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glow-primary {
+  filter: drop-shadow(0 0 12px rgba(255, 140, 0, 0.45));
+}
+
+.glow-white {
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.25));
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #ffb347 60%, #ff8c00 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-gradient-white {
+  background: linear-gradient(135deg, #ffffff 0%, #a3a3a3 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Utils */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.8; filter: brightness(1); }
+  50% { opacity: 1; filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 140, 0, 0.6)); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
 }
