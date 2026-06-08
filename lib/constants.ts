@@ -31,7 +31,9 @@ export const ORDER_STATUSES = [
   "pending",
   "confirmed",
   "preparing",
+  "ready",
   "delivered",
+  "cancelled",
 ] as const;
 
-export const STORAGE_BUCKET = "product-images";
+export const STORAGE_BUCKET = "products";

@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { logAction } from "@/lib/admin/activity";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -34,11 +35,15 @@ function LoginForm() {
   const onSubmit = async (values: LoginValues) => {
     setError(null);
     const supabase = createClient();
-    const { error: authError } = await supabase.auth.signInWithPassword(values);
+    const { data, error: authError } = await supabase.auth.signInWithPassword(values);
 
     if (authError) {
       setError(authError.message);
       return;
+    }
+
+    if (data.user) {
+        await logAction('login', 'auth', data.user.id, `Admin logged in: ${values.email}`);
     }
 
     const redirect = searchParams.get("redirect") ?? "/admin";

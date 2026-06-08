@@ -22,9 +22,9 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: t.nav.home },
     { href: "/menu", label: t.nav.menu },
+    { href: "/track-order", label: t.nav.track },
     { href: "/about", label: t.nav.about },
     { href: "/contact", label: t.nav.contact },
-    { href: "/location", label: t.nav.location },
   ];
 
   return (

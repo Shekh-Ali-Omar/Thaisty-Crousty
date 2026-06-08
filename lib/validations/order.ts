@@ -1,6 +1,13 @@
 import { Dictionary } from "@/lib/i18n/dictionaries";
 import { z } from "zod";
 
+export const checkoutSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  phone: z.string().min(8, "Valid phone required"),
+  address: z.string().min(5, "Address is required"),
+  notes: z.string().optional(),
+});
+
 export const getCheckoutSchema = (t: Dictionary) => z.object({
   name: z.string().min(2, t.checkout.errors.name),
   phone: z.string().min(8, t.checkout.errors.phone),
@@ -14,6 +21,10 @@ export const orderItemSchema = z.object({
   quantity: z.number().int().positive(),
   price: z.number().positive(),
   note: z.string().optional(),
+});
+
+export const createOrderSchema = checkoutSchema.extend({
+  items: z.array(orderItemSchema).min(1),
 });
 
 export type CheckoutFormValues = {

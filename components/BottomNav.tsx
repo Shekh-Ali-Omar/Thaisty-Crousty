@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, UtensilsCrossed, ShoppingBag, User } from "lucide-react";
+import { Home, UtensilsCrossed, ShoppingBag, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/components/locale-provider";
 import { useCartStore } from "@/store/cartStore";
@@ -12,7 +12,7 @@ const links = [
   { href: "/", icon: Home, key: "home" as const },
   { href: "/menu", icon: UtensilsCrossed, key: "menu" as const },
   { href: "/cart", icon: ShoppingBag, key: "cart" as const, openDrawer: true },
-  { href: "/profile", icon: User, key: "profile" as const },
+  { href: "/track-order", icon: Search, key: "track" as const },
 ];
 
 export function BottomNav() {

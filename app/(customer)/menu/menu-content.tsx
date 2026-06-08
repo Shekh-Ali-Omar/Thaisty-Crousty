@@ -9,7 +9,7 @@ import { CategoryFilter } from "@/components/CategoryFilter";
 import { useLocale } from "@/components/locale-provider";
 import { Input } from "@/components/ui/input";
 import type { Product } from "@/lib/types";
-import { fetchProducts } from "@/lib/products/fetch";
+import { getProducts } from "@/lib/products/repository";
 import { useCartStore } from "@/store/cartStore";
 import { useHydrated } from "@/lib/hooks";
 
@@ -22,18 +22,12 @@ export function MenuContent() {
   
   const [products, setProducts] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [category, setCategory] = useState(
-    searchParams.get("category") ?? "all"
-  );
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const cat = searchParams.get("category");
-    if (cat) setCategory(cat);
-  }, [searchParams]);
+  const category = searchParams.get("category") ?? "all";
 
   useEffect(() => {
-    fetchProducts()
+    getProducts()
       .then(setProducts)
       .finally(() => setLoading(false));
   }, []);
@@ -96,7 +90,7 @@ export function MenuContent() {
             <SlidersHorizontal className="h-4 w-4 text-primary" />
             <span className="text-[10px] font-black uppercase tracking-widest text-muted">{t.menu.filter}</span>
           </div>
-          <CategoryFilter active={category} onChange={setCategory} />
+          <CategoryFilter active={category} onChange={() => {}} />
         </div>
       </div>
 
@@ -121,7 +115,7 @@ export function MenuContent() {
             <p className="text-muted font-medium">Try searching for something else or clearing filters.</p>
           </div>
           <button 
-            onClick={() => {setCategory("all"); setSearchQuery("");}}
+            onClick={() => {setSearchQuery("");}}
             className="h-12 px-8 rounded-2xl bg-primary/10 text-primary font-bold border border-primary/20 hover:bg-primary/20 transition-colors"
           >
             {t.menu.clearFilters}

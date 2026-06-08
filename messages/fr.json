@@ -7,7 +7,8 @@
     "about": "À propos",
     "contact": "Contact",
     "location": "Lieu",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "track": "Suivre commande"
   },
   "home": {
     "title": "Thaisty Crousty",
@@ -149,7 +150,7 @@
     "questions": [
       {
         "q": "Où se trouve Thaisty Crousty ?",
-        "a": "Nous sommes situés au cœur de Dely Ibrahim, Alger. Notre adresse exacte est Rue 11 Décembre 1960. Vous trouverez une carte interactive sur notre page Lieu."
+        "a": "Nous sommes situés au cœur de Dely Ibrahim, Alger. Notre adresse exacte est Rue 11 Décembre 1960. Vous trouverez une carte interactive on our Location page."
       },
       {
         "q": "Quelles sont vos heures d'ouverture ?",
@@ -225,13 +226,38 @@
     "orderDetails": "Détails de la commande",
     "qty": "Qté",
     "finalConfirm": "Confirmation Finale",
-    "finalDesc": "Votre commande sera envoyée à notre cuisine via WhatsApp. N'oubliez pas d'appuyer sur \"Envoyer\" à l'étape suivante.",
-    "sendWhatsapp": "Envoyer la commande sur WhatsApp",
+    "finalDesc": "Votre commande sera envoyée à notre cuisine. Vous pouvez facultativement nous contacter via WhatsApp pour toute demande spéciale.",
+    "sendWhatsapp": "Contacter sur WhatsApp",
+    "submit": "Passer la commande",
     "errors": {
       "name": "Le nom est requis",
       "phone": "Téléphone valide requis",
       "address": "L'adresse est requise"
     }
+  },
+  "order": {
+    "success": "Commande soumise avec succès",
+    "number": "Numéro de commande",
+    "eta": "Temps de prép. estimé",
+    "etaVal": "20-30 minutes",
+    "summary": "Résumé de la commande",
+    "track": "Suivre commande",
+    "trackDesc": "Entrez vos coordonnées برای voir le statut.",
+    "status": "Statut",
+    "payment": "Paiement",
+    "unpaid": "Non payé (Paiement à la livraison)",
+    "paid": "Payé",
+    "statuses": {
+      "pending": "En attente",
+      "confirmed": "Confirmée",
+      "preparing": "En préparation",
+      "ready": "Prête",
+      "delivered": "Livrée",
+      "cancelled": "Annulée"
+    },
+    "notFound": "Commande introuvable. Veuillez vérifier vos coordonnées.",
+    "backToHome": "Retour à l'accueil",
+    "contact": "Contacter le restaurant"
   },
   "whatsapp": {
     "newOrder": "Nouvelle commande",

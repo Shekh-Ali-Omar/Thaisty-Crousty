@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { ShoppingBag, ArrowRight, MessageCircle } from "lucide-react";
+import { ShoppingBag, ArrowRight } from "lucide-react";
 import { useLocale } from "@/components/locale-provider";
 import { useCartStore } from "@/store/cartStore";
 import { formatPrice, cn } from "@/lib/utils";
@@ -19,13 +20,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { GlassCard } from "@/components/glass/GlassCard";
 import { useHydrated } from "@/lib/hooks";
-import { submitOrder } from "@/lib/whatsapp";
-import { useMemo } from "react";
 
 type Step = 1 | 2 | 3;
 
 export default function CheckoutPage() {
   const { t, locale } = useLocale();
+  const router = useRouter();
   const isHydrated = useHydrated();
   const items = useCartStore((s) => s.items);
   const total = useCartStore((s) => s.totalPrice());
@@ -81,18 +81,32 @@ export default function CheckoutPage() {
     setSubmitting(true);
     setError(null);
     try {
-      const success = await submitOrder({
-        customer: getValues() as any,
-        items,
-        total,
-        t,
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...getValues(),
+          items: items.map(i => ({
+            productId: i.productId,
+            name: i.name,
+            quantity: i.quantity,
+            price: i.price,
+            note: i.note
+          }))
+        }),
       });
-      if (success) {
+
+      const result = await response.json();
+
+      if (result.success) {
         clearCart();
+        // Redirect to success page with order ID
+        router.push(`/order-success?id=${result.order.id}`);
       } else {
-        setError(t.common.error);
+        setError(result.error || t.common.error);
       }
     } catch (err) {
+      console.error("[CHECKOUT_SUBMIT_ERROR]:", err);
       setError(t.common.error);
     } finally {
       setSubmitting(false);
@@ -228,7 +242,7 @@ export default function CheckoutPage() {
       {step === 3 && (
         <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col gap-8 text-center py-10">
           <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-            <MessageCircle className="h-12 w-12 text-primary glow-primary" />
+            <ShoppingBag className="h-12 w-12 text-primary glow-primary" />
           </div>
           <div>
             <h2 className="text-3xl font-black tracking-tight mb-4">{t.checkout.finalConfirm}</h2>
@@ -249,7 +263,7 @@ export default function CheckoutPage() {
               disabled={submitting}
               onClick={onConfirm}
             >
-              {submitting ? t.checkout.placing : t.checkout.sendWhatsapp}
+              {submitting ? t.checkout.placing : t.checkout.submit}
             </Button>
             <Button variant="glass" className="h-14 w-full rounded-2xl font-bold" onClick={() => setStep(2)} disabled={submitting}>
               {t.checkout.back}

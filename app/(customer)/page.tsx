@@ -20,8 +20,7 @@ import { Button } from "@/components/ui/button";
 import { FeaturedCarousel } from "@/components/FeaturedCarousel";
 import { GlassCard } from "@/components/glass/GlassCard";
 import { BRAND_NAME, BRAND_SUBTITLE } from "@/lib/constants";
-import { FEATURED_SLUGS } from "@/lib/products/catalog";
-import { fetchProducts } from "@/lib/products/fetch";
+import { getFeaturedProducts } from "@/lib/products/repository";
 import type { Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -30,15 +29,7 @@ export default function HomePage() {
   const [featured, setFeatured] = useState<Product[]>([]);
 
   useEffect(() => {
-    fetchProducts().then((all) => {
-      setFeatured(
-        FEATURED_SLUGS.map(
-          (slug) =>
-            all.find((p) => p.image?.includes(slug)) ??
-            all.find((p) => p.name.toLowerCase().includes(slug.split("-")[0]))
-        ).filter(Boolean) as Product[]
-      );
-    });
+    getFeaturedProducts().then(setFeatured);
   }, []);
 
   return (

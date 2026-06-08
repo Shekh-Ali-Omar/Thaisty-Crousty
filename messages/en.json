@@ -7,7 +7,8 @@
     "about": "About",
     "contact": "Contact",
     "location": "Location",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "track": "Track Order"
   },
   "home": {
     "title": "Thaisty Crousty",
@@ -225,13 +226,38 @@
     "orderDetails": "Order Details",
     "qty": "Qty",
     "finalConfirm": "Final Confirmation",
-    "finalDesc": "Your order will be sent to our kitchen via WhatsApp. Please don't forget to hit \"Send\" in the next step.",
-    "sendWhatsapp": "Send Order to WhatsApp",
+    "finalDesc": "Your order will be sent to our kitchen. You can optionally contact us via WhatsApp for any special requests.",
+    "sendWhatsapp": "Contact on WhatsApp",
+    "submit": "Place Order",
     "errors": {
       "name": "Name is required",
       "phone": "Valid phone required",
       "address": "Address is required"
     }
+  },
+  "order": {
+    "success": "Order Submitted Successfully",
+    "number": "Order Number",
+    "eta": "Estimated Prep Time",
+    "etaVal": "20-30 minutes",
+    "summary": "Order Summary",
+    "track": "Track Order",
+    "trackDesc": "Enter your details to see your order status.",
+    "status": "Status",
+    "payment": "Payment",
+    "unpaid": "Unpaid (Cash on Delivery)",
+    "paid": "Paid",
+    "statuses": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "preparing": "Preparing",
+      "ready": "Ready",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    },
+    "notFound": "Order not found. Please check your details.",
+    "backToHome": "Back to Home",
+    "contact": "Contact Restaurant"
   },
   "whatsapp": {
     "newOrder": "New Order",
