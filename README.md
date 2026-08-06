@@ -1,80 +1,130 @@
-# Thaisty Crousty - Dely Ibrahim
+# 🍔 Thaisty Crousty - Production Technical Documentation & Operational Architecture
 
-Production-ready single-restaurant food ordering web app.
+**Thaisty Crousty** is a high-performance, real-time commercial restaurant ordering system and POS operations dashboard built with Next.js 16, Electron, React 19, Vite, and Supabase.
 
-## Stack
+---
 
-- **Next.js** (App Router) + TypeScript + Tailwind CSS v4
-- **Supabase** (database, auth, storage)
-- **Zustand** (cart + localStorage)
-- **react-hook-form** + **zod**
-- **framer-motion** + **lucide-react**
+## 🏗 Architecture Overview
 
-## Quick start
+The system consists of two tightly integrated operational environments sharing domain models, localization dictionaries, and Supabase BaaS data layers:
 
-```bash
-npm install
-cp .env.example .env.local
-# Fill Supabase URL, anon key, service role key, WhatsApp number
-npm run dev
+1. **Customer Web Storefront & Web Admin (`/app`)**: Powered by Next.js 16 App Router, Tailwind CSS v4, Zustand, and server-side price/schedule validation.
+2. **Desktop POS Operations Dashboard (`/desktop-dashboard`)**: Powered by Electron + React 19 + Vite 6. Features silent thermal receipt printing (58mm/80mm), offline print queueing, auto-retry execution, and real-time audio alert notifications.
+
+### Core Data Flow
+
+```mermaid
+graph TD
+    subgraph Web Storefront [Next.js 16 App Router]
+        Customer[Customer Client] -->|POST Payload| OrdersAPI[/api/orders]
+        OrdersAPI -->|Verify Hours| StatusEngine[lib/restaurant-status.ts]
+        OrdersAPI -->|Recalculate Prices| DBProducts[(Supabase Products)]
+        OrdersAPI -->|Insert Header & Snapshots| DB[(Supabase Postgres)]
+    end
+
+    subgraph Desktop Dashboard [Electron + Vite + React 19]
+        DB -->|Realtime WebSockets| DesktopApp[App.tsx Dashboard]
+        DesktopApp -->|Deduplicate Event| AudioAlert[Order Ping Alert]
+        DesktopApp -->|Pass 58mm/80mm| PrintQueue[useAutoPrint Queue]
+        PrintQueue -->|IPC Silent Print| MainProc[Electron Main Process main.js]
+        MainProc -->|Thermal Output| HardwarePrint[POS Thermal Printer]
+    end
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+---
 
-## Supabase setup
+## 🛠 Tech Stack
 
-1. Create a project at [supabase.com](https://supabase.com).
-2. Run `supabase/schema.sql` in the SQL Editor.
-3. Run `supabase/seed-products.sql` to load all **22 menu items** (images in `public/products/`).
-4. Create a **public** storage bucket named `product-images` and run `supabase/storage.sql` (for admin uploads).
-4. Create an admin user: **Authentication → Users → Add user** (email + password).
-5. Copy project URL and keys into `.env.local`:
+| Component | Technology | Purpose & Usage |
+| :--- | :--- | :--- |
+| **Storefront & Web** | Next.js 16 (App Router) | Server-side rendering, customer flow, security middleware, API endpoints. |
+| **Desktop Application** | Electron 33 + Vite 6 + React 19 | POS desktop dashboard, hardware thermal printing IPC, auto-print queue. |
+| **Database & BaaS** | Supabase (Postgres, Storage, Auth) | Database storage, real-time WebSockets, RLS access policies. |
+| **Styling & Motion** | Tailwind CSS v4 + Framer Motion 12 | Liquid Glass UI design, smooth micro-interactions, responsive layouts. |
+| **State Management** | Zustand 5 | Persistent customer cart state and POS printer preferences. |
+| **Validations & i18n** | Zod 4 + Custom i18n Engine | Schema validation, multilingual dictionaries (AR, FR, EN) with RTL support. |
 
+---
+
+## 📁 Repository Directory Structure
+
+```text
+d:\oaa\thaisty-order\
+├── app/                        # Next.js 16 App Router
+│   ├── (customer)/             # Customer pages (Home, Menu, Product, Cart, Checkout, Success)
+│   ├── admin/                  # Web admin dashboard (Orders, Products, Activity, Analytics)
+│   └── api/                    # Secure Server API routes (/api/orders, /api/restaurant-status)
+├── components/                 # Shared React Components
+│   ├── admin/                  # Shared Admin UI (ReceiptTemplate, OrderDetailsModal)
+│   ├── glass/                  # Glassmorphism container components
+│   └── ui/                     # Primitives (Button, Input, Badge, Card)
+├── desktop-dashboard/          # Electron POS Desktop Dashboard
+│   ├── electron/               # Main process (main.js) and context bridge (preload.js)
+│   ├── src/                    # Desktop React app (App.tsx, ProductManager, RestaurantStatus)
+│   └── vite.config.ts          # Vite bundler with Next.js compatibility aliases
+├── lib/                        # Domain Core & Utility Layer
+│   ├── image.ts                # Unified Product Image Resolver
+│   ├── restaurant-status.ts    # Africa/Algiers timezone schedule & reopening calculator
+│   ├── types.ts                # TypeScript domain models (Product, Order, RestaurantSettings)
+│   └── products/repository.ts  # Database repository abstraction
+├── messages/                   # i18n JSON Dictionaries (en.json, fr.json, ar.json)
+├── store/                      # Zustand Stores (cartStore.ts)
+└── supabase/                   # SQL Migrations, Schema, and Seed files
+```
+
+---
+
+## 🔒 Security & Role-Based Access Control (RBAC)
+
+* **Server-side Validation**: Prices and subtotals are recalculated on the server in `/api/orders` from database prices to prevent client-side tampering.
+* **Operating Hours Enforcement**: Customer checkout and cart additions are validated against `restaurant_settings` in `Africa/Algiers` timezone.
+* **Middleware RBAC**: `middleware.ts` intercepts `/admin` routes and verifies `is_admin` role via service role client to prevent unauthorized access.
+
+---
+
+## 🖨 Thermal Printing & Offline Queue Engine
+
+* **Silent Printing**: Invokes hidden native `BrowserWindow.print({ silent: true })` from Electron main process.
+* **Paper Roll Adaptation**: Adapts receipt layout, fonts, and padding dynamically for **80mm** or **58mm** paper widths via `ReceiptTemplate.tsx`.
+* **Queue & Retry**: Failed print jobs stay queued and auto-retry every 20 seconds when hardware is restored.
+
+---
+
+## 🚀 Setup & Execution Guide
+
+### Prerequisites
+* **Node.js**: `v20.x` or higher
+* **Package Manager**: `npm`
+
+### Environment Configuration (`.env.local` & `desktop-dashboard/.env`)
 ```env
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 NEXT_PUBLIC_RESTAURANT_ID=00000000-0000-0000-0000-000000000001
-NEXT_PUBLIC_WHATSAPP_NUMBER=213XXXXXXXXX
 ```
 
-## Features
+### Running Locally
 
-| Area | Routes |
-|------|--------|
-| Home | `/` |
-| Menu | `/menu` |
-| Cart | `/cart` |
-| Checkout (3 steps) | `/checkout` |
-| Profile / language | `/profile` |
-| Admin | `/admin`, `/admin/products`, `/admin/orders` |
-| Admin login | `/admin/login` |
+1. **Web Storefront & Web Admin**:
+   ```bash
+   npm run dev
+   ```
+   * Web Customer: [http://localhost:3000](http://localhost:3000)
+   * Web Admin: [http://localhost:3000/admin](http://localhost:3000/admin)
 
-**Order flow:** checkout → save order + items via `/api/orders` → redirect to WhatsApp with prefilled message.
+2. **Electron POS Desktop Dashboard**:
+   ```bash
+   cd desktop-dashboard
+   npm run dev           # Terminal 1 (Vite dev server)
+   npm run electron:dev  # Terminal 2 (Electron window)
+   ```
 
-## Brand & UI
+---
 
-- **Liquid Glass** design: glassmorphism, mesh gradients, floating product cards
-- Colors: background `#0B0B0B`, glass `rgba(255,255,255,0.06–0.10)`, primary `#FF8C00`, secondary `#FFB347`
-- Fonts: Inter (EN/FR), Cairo (AR)
-- i18n: English, French, Arabic (browser + profile)
-- Menu works offline from `lib/products/catalog.ts` if Supabase is empty
+## 📋 Production Readiness Verification
 
-## Menu (22 products)
-
-| Category | Items |
-|----------|--------|
-| **Crousty** | Classic, Mix, Curry Thai, Curry Mix |
-| **Spicy** | Spicy, Curry Spicy |
-| **Sweet** | Sweet, Curry Sweet, 9× Crème Dessert, Crème Brûlée, 4× Tiramisu |
-
-Prices are placeholders (750–850 DA bowls, 350–500 DA desserts). Adjust in admin or `data/products.json`.
-
-## Scripts
-
-```bash
-npm run dev
-npm run build
-npm run start
-npm run lint
-```
+- ✅ **TypeScript Check**: `0` errors across Web & Desktop.
+- ✅ **Image Resolver**: Single source of truth in `lib/image.ts`.
+- ✅ **Realtime Resiliency**: Deduplicated event payloads with automatic WebSocket auto-reconnect.
+- ✅ **Memory Audit**: Explicit destruction of print `BrowserWindow` handles to prevent memory leaks.

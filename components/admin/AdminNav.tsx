@@ -3,25 +3,28 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Package, ClipboardList, LogOut, ShieldCheck, Bell, History } from "lucide-react";
+import { LayoutDashboard, Package, ClipboardList, LogOut, ShieldCheck, Bell, History, Printer } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { logAction } from "@/lib/admin/activity";
-
-const links = [
-  { href: "/admin", icon: LayoutDashboard, label: "Overview" },
-  { href: "/admin/products", icon: Package, label: "Menu Catalog" },
-  { href: "/admin/orders", icon: ClipboardList, label: "Order Stream" },
-  { href: "/admin/notifications", icon: Bell, label: "Alerts" },
-  { href: "/admin/activity", icon: History, label: "Audit Trail" },
-];
+import { useLocale } from "@/components/locale-provider";
 
 export function AdminNav() {
+  const { t } = useLocale();
   const pathname = usePathname();
   const router = useRouter();
   const [email, setEmail] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  const links = [
+    { href: "/admin", icon: LayoutDashboard, label: t.admin.overview },
+    { href: "/admin/products", icon: Package, label: t.admin.menu_catalog },
+    { href: "/admin/orders", icon: ClipboardList, label: t.admin.order_stream },
+    { href: "/admin/printing", icon: Printer, label: "Printing Status" },
+    { href: "/admin/notifications", icon: Bell, label: t.admin.alerts },
+    { href: "/admin/activity", icon: History, label: t.admin.audit_trail },
+  ];
 
   useEffect(() => {
     const supabase = createClient();
@@ -29,12 +32,10 @@ export function AdminNav() {
       if (user) setEmail(user.email ?? null);
     });
 
-    // Initial count
     supabase.from("admin_notifications").select("id", { count: "exact" }).eq("is_read", false).then(({ count }) => {
         setUnreadCount(count || 0);
     });
 
-    // Realtime listener for unread count
     const channel = supabase.channel("admin-nav-alerts").on("postgres_changes", { event: "*", schema: "public", table: "admin_notifications" }, () => {
         supabase.from("admin_notifications").select("id", { count: "exact" }).eq("is_read", false).then(({ count }) => {
             setUnreadCount(count || 0);
@@ -75,7 +76,7 @@ export function AdminNav() {
             >
               <Icon className={cn("h-5 w-5", active ? "text-black" : "text-primary")} />
               {label}
-              {label === "Alerts" && unreadCount > 0 && (
+              {label === t.admin.alerts && unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-[10px] font-black text-white flex items-center justify-center shadow-lg animate-pulse">
                   {unreadCount}
                 </span>
@@ -87,8 +88,8 @@ export function AdminNav() {
 
       <div className="flex items-center gap-4 bg-white/5 pl-6 pr-3 py-2 rounded-2xl border border-white/5">
         <div className="flex flex-col text-right hidden sm:block">
-          <p className="text-[10px] font-black text-muted uppercase tracking-[0.2em] mb-1">Signed in as</p>
-          <p className="text-xs font-bold text-foreground">{email || "Loading..."}</p>
+          <p className="text-[10px] font-black text-muted uppercase tracking-[0.2em] mb-1">{t.admin.signed_in_as}</p>
+          <p className="text-xs font-bold text-foreground">{email || t.common.loading}</p>
         </div>
         <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
           <ShieldCheck className="h-6 w-6 text-primary glow-primary" />
@@ -98,7 +99,7 @@ export function AdminNav() {
           size="icon"
           className="h-10 w-10 rounded-xl hover:text-red-400"
           onClick={signOut}
-          title="Sign Out"
+          title={t.admin.signOut}
         >
           <LogOut className="h-5 w-5" />
         </Button>

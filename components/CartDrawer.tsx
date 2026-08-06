@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
+import { Minus, Plus, ShoppingBag, Trash2, X, ArrowLeft } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useLocale } from "@/components/locale-provider";
 import { formatPrice, cn } from "@/lib/utils";
+import { resolveProductImageUrl } from "@/lib/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -69,33 +70,39 @@ export function CartDrawer() {
 
             <div className="flex-1 overflow-y-auto px-4 py-3">
               {items.length === 0 ? (
-                <p className="py-16 text-center text-muted">{t.cart.empty}</p>
+                <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
+                  <ShoppingBag className="h-12 w-12 text-muted opacity-20" />
+                  <p className="text-muted">{t.cart.empty}</p>
+                  <Button variant="glass" onClick={closeCart}>{t.profile.continue_shopping}</Button>
+                </div>
               ) : (
                 <ul className="flex flex-col gap-3">
-                  {items.map((item) => (
-                    <motion.li
-                      key={item.productId}
-                      layout
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="glass rounded-xl p-3"
-                    >
-                      <div className="flex gap-3">
-                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl">
-                          {item.image ? (
-                            <Image
-                              src={item.image}
-                              alt={item.name}
-                              fill
-                              className="object-cover"
-                              sizes="64px"
-                            />
-                          ) : (
-                            <div className="flex h-full items-center justify-center bg-black/40 text-2xl">
-                              🍗
-                            </div>
-                          )}
-                        </div>
+                  {items.map((item) => {
+                    const itemImageUrl = resolveProductImageUrl(item.image);
+                    return (
+                      <motion.li
+                        key={item.productId}
+                        layout
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="glass rounded-xl p-3"
+                      >
+                        <div className="flex gap-3">
+                          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl">
+                            {itemImageUrl ? (
+                              <Image
+                                src={itemImageUrl}
+                                alt={item.name}
+                                fill
+                                className="object-cover"
+                                sizes="64px"
+                              />
+                            ) : (
+                              <div className="flex h-full items-center justify-center bg-black/40 text-2xl">
+                                🍗
+                              </div>
+                            )}
+                          </div>
                         <div className="min-w-0 flex-1">
                           <div className="flex items-start justify-between gap-2">
                             <p className="font-semibold leading-tight">{item.name}</p>
@@ -149,20 +156,27 @@ export function CartDrawer() {
                         </div>
                       </div>
                     </motion.li>
-                  ))}
+                  );
+                })}
                 </ul>
               )}
             </div>
 
             {items.length > 0 && (
-              <div className="border-t border-white/10 p-4 glass">
-                <div className="mb-3 flex justify-between text-lg font-bold">
+              <div className="border-t border-white/10 p-4 glass space-y-3">
+                <div className="mb-1 flex justify-between text-lg font-bold">
                   <span>{t.cart.total}</span>
                   <span className="text-gradient">{formatPrice(total)}</span>
                 </div>
-                <Button asChild size="lg" className="w-full" onClick={closeCart}>
-                  <Link href="/checkout">{t.cart.checkout}</Link>
-                </Button>
+                
+                <div className="flex flex-col gap-2">
+                    <Button asChild size="lg" className="w-full bg-primary text-black font-bold" onClick={closeCart}>
+                      <Link href="/checkout">{t.cart.checkout}</Link>
+                    </Button>
+                    <Button variant="glass" className="w-full h-12 rounded-xl font-medium" onClick={closeCart}>
+                      {t.profile.continue_shopping}
+                    </Button>
+                </div>
               </div>
             )}
           </motion.aside>

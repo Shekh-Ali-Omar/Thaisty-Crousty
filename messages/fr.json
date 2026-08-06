@@ -8,13 +8,13 @@
     "contact": "Contact",
     "location": "Lieu",
     "faq": "FAQ",
-    "track": "Suivre commande"
+    "track": "Suivre la commande"
   },
   "home": {
     "title": "Thaisty Crousty",
-    "subtitle": "Dely Ibrahim — Street food, maxi goût",
+    "subtitle": "Dely Ibrahim — Street food, grandes saveurs",
     "cta": "Commander",
-    "featured": "Nos best-sellers",
+    "featured": "Coups de cœur",
     "hero": {
       "premium": "Dely Ibrahim",
       "title": "Goûtez au Premium.",
@@ -23,26 +23,26 @@
       "under30": "Moins de 30 Min"
     },
     "whyUs": {
-      "title": "Nos best-sellers",
+      "title": "Coups de cœur",
       "recipes": {
         "title": "Recettes Uniques",
-        "desc": "Mélanges secrets d'épices et techniques artisanales que vous ne trouverez nulle part ailleurs."
+        "desc": "Mélanges secrets d'épices et techniques artisanales introuvables ailleurs."
       },
       "service": {
-        "title": "Service Flash",
-        "desc": "Premium ne veut pas dire lent. Nous livrons un goût haut de gamme en un temps record."
+        "title": "Service Éclair",
+        "desc": "Premium ne signifie pas lent. Nous livrons des saveurs haut de gamme en un temps record."
       },
       "quality": {
         "title": "Qualité Élite",
-        "desc": "Ingrédients 100% frais et locaux pour le croustillant et la saveur ultimes."
+        "desc": "Ingrédients 100% frais et locaux pour un croquant et une saveur ultimes."
       }
     },
     "testimonials": {
-      "title": "Ce que disent nos fans",
+      "title": "Ce Que Disent Nos Fans",
       "reviews": [
         {
           "name": "Yanis K.",
-          "text": "Le meilleur crousty mix d'Alger. La sauce est vraiment addictive !"
+          "text": "Meilleur crousty mix d'Alger. La sauce est vraiment addictive !"
         },
         {
           "name": "Amine S.",
@@ -57,61 +57,72 @@
     "add": "Ajouter",
     "unavailable": "Indisponible",
     "empty": "Aucun produit dans cette catégorie",
-    "search": "Recherchez nos saveurs...",
-    "filter": "Filtrer par catégorie",
+    "search": "Rechercher nos saveurs...",
+    "filter": "Filtrer par Catégorie",
     "itemsCount": "articles exquis disponibles pour vous",
-    "clearFilters": "Effacer tous les filtres",
-    "viewAll": "Voir tout le menu",
+    "clearFilters": "Effacer les filtres",
+    "viewAll": "Voir Tout le Menu",
     "categories": {
       "all": "Tout",
       "crousty": "Crousty",
-      "spicy": "Spicy",
-      "sweet": "Sweet",
+      "spicy": "Épicé",
+      "sweet": "Sucré",
       "drink": "Boissons"
     }
   },
   "about": {
     "legacy": "Notre Héritage",
-    "title": "Une Histoire de Passion & de Croustillant.",
-    "desc": "Né au cœur de Dely Ibrahim, Thaisty Crousty a été créé pour redéfinir la street food. Nous pensons que les repas rapides ne devraient jamais faire de compromis sur la qualité, le style ou l'âme.",
+    "title": "Une Histoire de Passion & de Croquant.",
+    "desc": "Né au cœur de Dely Ibrahim, Thaisty Crousty a été créé pour redéfinir la street food. Nous pensons que les repas rapides ne doivent jamais compromettre la qualité, le style ou l'âme.",
     "recipe": {
       "title": "La Recette Originale",
-      "desc": "Perfectionnée après 3 ans de tests."
+      "desc": "Perfectionnée au cours de 3 ans de tests."
     },
     "ingredients": {
       "title": "Ingrédients d'Élite",
-      "desc": "100% frais, 100% locaux."
+      "desc": "100% frais, 100% local."
     },
     "values": {
       "love": {
-        "title": "Confectionné avec Amour",
-        "desc": "Chaque burger, chaque dessert est fait comme s'il était pour notre propre famille."
+        "title": "Conçu avec Amour",
+        "desc": "Chaque burger, chaque dessert est préparé comme s'il était destiné à notre propre famille."
       },
       "premium": {
-        "title": "Uniquement Premium",
+        "title": "Premium Uniquement",
         "desc": "Du pain à l'emballage, nous n'utilisons que les meilleurs matériaux disponibles."
       },
       "vision": {
         "title": "Vision Culinaire",
         "desc": "Innover constamment de nouvelles saveurs pour garder vos papilles en éveil."
-      }
+      },
+      "title": "Nos Valeurs d'Élite"
     },
     "cta": {
       "title": "Prêt à rejoindre l'élite ?",
-      "desc": "Découvrez le croustillant dont tout le monde parle. Votre expérience premium est à portée de clic.",
-      "button": "Explorer notre Menu"
+      "desc": "Découvrez le croquant dont tout le monde parle. Votre expérience premium est à portée de clic.",
+      "button": "Explorer Notre Menu"
     },
-    "quote": "La qualité n'est pas un acte, c'est une habitude."
+    "quote": "La qualité n'est pas un acte, c'est une habitude.",
+    "stats": {
+      "fans": "Fans Heureux",
+      "spices": "Épices Secrètes",
+      "recipes": "Recettes Artisanales",
+      "chefs": "Chefs d'Élite"
+    }
   },
   "contact": {
-    "title": "Contactez-nous.",
+    "title": "Connectons-nous.",
     "subtitle": "Une question ou un commentaire ? Nous sommes là pour vous écouter et mieux vous servir.",
     "callUs": "Appelez-nous",
     "whatsapp": "WhatsApp",
-    "hours": "Heures d'ouverture",
+    "hours": "Heures d'Ouverture",
     "hoursVal": "Tous les jours : 11h00 - 23h00",
     "location": "Notre Emplacement",
     "locationVal": "Rue 11 Décembre 1960, Dely Ibrahim, Alger",
+    "direct_channels": "Canaux Directs",
+    "send_message": "Envoyez-nous un message",
+    "restaurant_location": "Emplacement du Restaurant",
+    "get_directions": "Obtenir l'Itinéraire",
     "form": {
       "name": "Votre Nom",
       "email": "Votre Email",
@@ -125,14 +136,14 @@
         "message": "Écrivez vos pensées ici..."
       }
     },
-    "mapLoading": "Chargement de la carte interactive..."
+    "mapLoading": "Chargement de la Carte Interactive..."
   },
   "location": {
     "title": "Au Cœur de Dely Ibrahim.",
-    "directions": "Obtenir l'itinéraire",
+    "directions": "Obtenir l'Itinéraire",
     "parking": {
       "title": "Parking",
-      "desc": "Un grand parking gratuit est disponible directement devant le restaurant et dans le parking sécurisé adjacent."
+      "desc": "Un vaste parking gratuit est disponible juste devant le restaurant et dans le parking sécurisé adjacent."
     },
     "delivery": {
       "title": "Zones de Livraison",
@@ -145,24 +156,24 @@
     "follow": "Suivez notre aventure"
   },
   "faq": {
-    "title": "Questions Fréquemment Posées.",
+    "title": "Foire Aux Questions.",
     "supportTag": "Support",
     "questions": [
       {
         "q": "Où se trouve Thaisty Crousty ?",
-        "a": "Nous sommes situés au cœur de Dely Ibrahim, Alger. Notre adresse exacte est Rue 11 Décembre 1960. Vous trouverez une carte interactive on our Location page."
+        "a": "Nous sommes situés au cœur de Dely Ibrahim, Alger. Notre adresse exacte est Rue 11 Décembre 1960. Vous trouverez une carte interactive sur notre page Lieu."
       },
       {
         "q": "Quelles sont vos heures d'ouverture ?",
-        "a": "Nous sommes ouverts tous les jours de 11h00 à 23h00. Le week-end, nous restons souvent ouverts jusqu'à minuit pour satisfaire vos envies tardives."
+        "a": "Nous sommes ouverts tous les jours de 11h00 à 23h00. Le week-end, nous restons souvent ouverts jusqu'à minuit."
       },
       {
-        "q": "Comment puis-je passer une commande ?",
-        "a": "Vous pouvez parcourir notre menu, ajouter des articles à votre panier et commander directement sur notre site. La commande finale est envoyée via WhatsApp à notre cuisine pour une préparation immédiate."
+        "q": "Comment puis-je passer commande ?",
+        "a": "Vous pouvez parcourir notre menu, ajouter des articles à votre panier et valider votre commande ici même sur notre site web. La commande finale est envoyée via WhatsApp à notre cuisine pour une préparation immédiate."
       },
       {
         "q": "Proposez-vous la livraison ?",
-        "a": "Oui, nous proposons une livraison rapide à Dely Ibrahim et dans les zones environnantes, notamment Cheraga et Ouled Fayet. La livraison est généralement gratuite pour les commandes dépassant un certain montant."
+        "a": "Oui, nous proposons une livraison rapide à Dely Ibrahim et dans les zones environnantes, notamment Cheraga et Ouled Fayet. La livraison est généralement gratuite pour les commandes supérieures à un certain montant."
       },
       {
         "q": "Vos ingrédients sont-ils frais ?",
@@ -170,37 +181,37 @@
       },
       {
         "q": "Avez-vous des options végétariennes ?",
-        "a": "Oui ! Bien que nous soyons célèbres pour nos viandes 'Crousty', nous avons une sélection de délicieux desserts et pouvons personnaliser certains articles pour qu'ils soient végétariens. Recherchez la catégorie 'Sweet' dans notre menu."
+        "a": "Oui ! Bien que nous soyons célèbres pour nos viandes 'Crousty', nous avons une sélection de délicieux desserts et pouvons personnaliser certains articles pour qu'ils soient adaptés aux végétariens."
       }
     ],
     "more": {
-      "title": "Vous avez encore des questions ?",
-      "desc": "Vous ne trouvez pas la réponse que vous cherchez ? Contactez notre équipe amicale sur WhatsApp.",
+      "title": "Encore des questions ?",
+      "desc": "Vous ne trouvez pas la réponse que vous cherchez ? Contactez notre équipe sympathique sur WhatsApp.",
       "button": "Contacter le Support"
     }
   },
   "footer": {
-    "brandDesc": "Découvrez la meilleure street food à Dely Ibrahim. Confectionnée avec passion, servie avec style.",
+    "brandDesc": "Découvrez la meilleure street food de Dely Ibrahim. Conçu avec passion, servi avec style.",
     "support": "Support",
-    "visit": "Visitez-nous",
+    "visit": "Nous Visiter",
     "privacy": "Politique de Confidentialité",
     "terms": "Conditions d'Utilisation",
     "open": "Cuisine Ouverte",
-    "handcrafted": "Fait main par Premium Media",
+    "handcrafted": "Conçu par Premium Media",
     "rights": "Tous droits réservés."
   },
   "cart": {
     "title": "Votre panier",
     "empty": "Votre panier est vide",
-    "emptySubtitle": "Ajoutez un peu de croustillant premium à votre journée.",
+    "emptySubtitle": "Ajoutez un peu de croquant premium à votre journée.",
     "total": "Total",
-    "checkout": "Commander",
-    "remove": "Retirer",
+    "checkout": "Payer",
+    "remove": "Supprimer",
     "note": "Note",
-    "notePlaceholder": "Sauce en plus, sans oignons…",
+    "notePlaceholder": "Sauce supplémentaire, sans oignons…",
     "viewCart": "Voir le panier",
-    "items": "articles",
-    "summary": "Récapitulatif de la commande",
+    "items": "Articles",
+    "summary": "Résumé de la Commande",
     "subtotal": "Sous-total",
     "delivery": "Livraison",
     "deliveryFree": "Gratuit",
@@ -208,10 +219,10 @@
     "secure": "Paiement sécurisé via WhatsApp"
   },
   "checkout": {
-    "title": "Commande",
+    "title": "Paiement",
     "subtitle": "Finalisez votre expérience premium",
-    "stepInfo": "Infos",
-    "stepReview": "Récap",
+    "stepInfo": "Détails",
+    "stepReview": "Révision",
     "stepConfirm": "Confirmer",
     "name": "Nom complet",
     "phone": "Téléphone",
@@ -219,16 +230,16 @@
     "notes": "Notes de commande",
     "confirm": "Confirmer la commande",
     "back": "Retour",
-    "review": "Vérifier la commande",
-    "placing": "Envoi en cours…",
-    "deliveryInfo": "Informations de livraison",
+    "review": "Réviser la commande",
+    "placing": "Commande en cours…",
+    "deliveryInfo": "Informations de Livraison",
     "customer": "Client",
-    "orderDetails": "Détails de la commande",
+    "orderDetails": "Détails de la Commande",
     "qty": "Qté",
     "finalConfirm": "Confirmation Finale",
     "finalDesc": "Votre commande sera envoyée à notre cuisine. Vous pouvez facultativement nous contacter via WhatsApp pour toute demande spéciale.",
     "sendWhatsapp": "Contacter sur WhatsApp",
-    "submit": "Passer la commande",
+    "submit": "Passer la Commande",
     "errors": {
       "name": "Le nom est requis",
       "phone": "Téléphone valide requis",
@@ -236,31 +247,32 @@
     }
   },
   "order": {
-    "success": "Commande soumise avec succès",
-    "number": "Numéro de commande",
-    "eta": "Temps de prép. estimé",
+    "success": "Commande Soumise avec Succès",
+    "number": "Numéro de Commande",
+    "date": "Date",
+    "eta": "Temps de Préparation Estimé",
     "etaVal": "20-30 minutes",
-    "summary": "Résumé de la commande",
-    "track": "Suivre commande",
-    "trackDesc": "Entrez vos coordonnées برای voir le statut.",
+    "summary": "Résumé de la Commande",
+    "track": "Suivre la Commande",
+    "trackDesc": "Entrez vos coordonnées pour voir le statut de votre commande.",
     "status": "Statut",
     "payment": "Paiement",
-    "unpaid": "Non payé (Paiement à la livraison)",
+    "unpaid": "Non payé (Espèces à la livraison)",
     "paid": "Payé",
     "statuses": {
       "pending": "En attente",
-      "confirmed": "Confirmée",
+      "confirmed": "Confirmé",
       "preparing": "En préparation",
-      "ready": "Prête",
-      "delivered": "Livrée",
-      "cancelled": "Annulée"
+      "ready": "Prêt",
+      "delivered": "Livré",
+      "cancelled": "Annulé"
     },
     "notFound": "Commande introuvable. Veuillez vérifier vos coordonnées.",
-    "backToHome": "Retour à l'accueil",
-    "contact": "Contacter le restaurant"
+    "backToHome": "Retour à l'Accueil",
+    "contact": "Contacter le Restaurant"
   },
   "whatsapp": {
-    "newOrder": "Nouvelle commande",
+    "newOrder": "Nouvelle Commande",
     "items": "Articles",
     "total": "Total",
     "name": "Nom",
@@ -271,14 +283,58 @@
   "profile": {
     "title": "Profil",
     "language": "Langue",
-    "admin": "Tableau de bord admin"
+    "admin": "Tableau de bord",
+    "appearance": "Apparence",
+    "interface_desc": "Personnalisez votre expérience de street food premium.",
+    "interface_system": "Système Visuel",
+    "theme": {
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Automatique"
+    },
+    "save": "Enregistrer les modifications",
+    "saved": "Enregistré",
+    "authorized": "Autorisé",
+    "management": "Gestion",
+    "dashboard_desc": "Accéder au centre de contrôle et aux analyses.",
+    "continue_shopping": "Continuer les Achats",
+    "identity_required": "Identité Requise",
+    "identity_desc": "Connectez-vous pour synchroniser vos commandes, adresses et préférences premium.",
+    "management_login": "Connexion de Gestion",
+    "logistics": "Logistique",
+    "track_desc": "Identifiez et suivez votre logistique active.",
+    "archive": "Manifeste d'Archive",
+    "archive_desc": "Synchronisation des données historiques bientôt disponible.",
+    "configuration": "Configuration",
+    "global_protocol": "Protocole Global",
+    "visual_system": "Système Visuel",
+    "visual_desc": "L'esthétique de l'interface s'adaptera à votre sélection.",
+    "drop_point": "Points de Dépôt par Défaut",
+    "contact_logic": "Logique de Contact",
+    "base_destination": "Destination de Base",
+    "authorize_changes": "Autoriser les Modifications"
+  },
+  "product": {
+    "description": "Description",
+    "description_fallback": "Chaque ingrédient est sélectionné pour un croquant maximal et une saveur artisanale. Un véritable chef-d'œuvre de street food préparé avec soin.",
+    "market_description": "Description du Marché",
+    "premium_selection": "Sélection Premium",
+    "in_stock": "En Stock & Prêt",
+    "authorized_listing": "Annonce Autorisée",
+    "culinary_composition": "Composition Culinaire",
+    "flash_service": "Service Flash",
+    "market_rating": "Note du Marché",
+    "configure_volume": "Configurer le Volume",
+    "selection_added": "Sélection Ajoutée",
+    "authorized": "Autorisé",
+    "platform_footer": "Thaisty Crousty - Street Food Premium Alger"
   },
   "admin": {
-    "login": "Connexion admin",
-    "email": "E-mail",
+    "login": "Connexion Admin",
+    "email": "Email",
     "password": "Mot de passe",
     "signIn": "Se connecter",
-    "signOut": "Déconnexion",
+    "signOut": "Se déconnecter",
     "dashboard": "Tableau de bord",
     "products": "Produits",
     "orders": "Commandes",
@@ -293,14 +349,54 @@
     "available": "Disponible",
     "image": "Image",
     "status": "Statut",
-    "orderDetails": "Détails commande",
-    "noOrders": "Aucune commande"
+    "orderDetails": "Détails de la commande",
+    "noOrders": "Aucune commande",
+    "order_stream": "Flux de commandes",
+    "order_desc": "Traitement et exécution des commandes en temps réel.",
+    "all_statuses": "Toutes les étapes",
+    "syncing": "Synchronisation du flux en direct...",
+    "identify": "Identifier Commande # ou Nom...",
+    "revenue": "Revenu",
+    "active_pipeline": "Pipeline Actif",
+    "avg_ticket": "Panier Moyen",
+    "fulfillment": "Exécution Réussie",
+    "live_analytics": "Analyses en Direct",
+    "performance_desc": "Mesures de performance en temps réel pour Thaisty Crousty.",
+    "best_sellers": "Meilleures Ventes",
+    "system_status": "État du Système",
+    "delivered": "Livré",
+    "cancelled": "Annulé",
+    "manage_feed": "Gérer le Flux",
+    "feed_desc": "Entrez dans le flux de commandes en direct et traitez les demandes des clients.",
+    "lifetime_volume": "VOLUME TOTAL",
+    "sync_intelligence": "Intelligence de Synchronisation",
+    "sync_logic": "Logique de Synchronisation",
+    "commit_updates": "Valider les Mises à Jour",
+    "create_master": "Créer l'Atout Maître",
+    "discard": "Annuler les Modifications",
+    "gallery": "Galerie & Visuels",
+    "multilingual": "Contenu Multilingue",
+    "pricing_strategy": "Stratégie de Prix",
+    "marketing": "Marketing & Visibilité",
+    "overview": "Aperçu",
+    "menu_catalog": "Catalogue Menu",
+    "alerts": "Alertes",
+    "audit_trail": "Piste d'Audit",
+    "signed_in_as": "Connecté en tant que",
+    "notification_center": "Centre de Notifications",
+    "audit_desc": "Journal d'audit des alertes système et des nouvelles commandes.",
+    "mark_all_read": "Tout marquer comme lu",
+    "immutable_record": "Enregistrement immuable de toutes les opérations administratives.",
+    "retrieving_history": "Récupération de l'historique...",
+    "search_audit": "Rechercher dans les journaux d'audit...",
+    "admin": "Admin"
   },
   "common": {
     "loading": "Chargement…",
     "error": "Une erreur est survenue",
     "premium": "Premium",
     "instagram": "Instagram",
-    "facebook": "Facebook"
+    "facebook": "Facebook",
+    "back_to_menu": "Retour au Menu"
   }
 }

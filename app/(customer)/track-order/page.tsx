@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Package, Clock, CheckCircle2, Truck, XCircle, AlertCircle } from "lucide-react";
 import { useLocale } from "@/components/locale-provider";
@@ -49,6 +49,36 @@ export default function TrackOrderPage() {
       setLoading(false);
     }
   };
+
+  // REALTIME TRACKING
+  useEffect(() => {
+    if (!order?.id) return;
+
+    const supabase = createClient();
+    const channel = supabase
+      .channel(`order-tracking-${order.id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "orders",
+          filter: `id=eq.${order.id}`,
+        },
+        (payload) => {
+          console.log("[TRACKING_REALTIME]: Order updated", payload);
+          setOrder((current: any) => {
+            if (!current) return null;
+            return { ...current, ...payload.new };
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [order?.id]);
 
   const statusSteps = [
     { key: "pending", icon: Clock },
@@ -122,7 +152,7 @@ export default function TrackOrderPage() {
                 <div className="absolute top-5 left-0 right-0 h-0.5 bg-white/5 z-0" />
                 <div 
                   className="absolute top-5 left-0 h-0.5 bg-primary transition-all duration-1000 z-0" 
-                  style={{ width: `${(currentStatusIndex / (statusSteps.length - 1)) * 100}%` }}
+                  style={{ width: `${(Math.max(0, currentStatusIndex) / (statusSteps.length - 1)) * 100}%` }}
                 />
 
                 {statusSteps.map((step, i) => {
@@ -142,7 +172,7 @@ export default function TrackOrderPage() {
                         "text-[9px] font-black uppercase tracking-tighter text-center",
                         isDone ? "text-primary" : "text-muted"
                       )}>
-                        {(t.order.statuses as any)[step.key]}
+                        {(t.order.statuses as any)[step.key] || step.key}
                       </span>
                     </div>
                   );
@@ -152,16 +182,16 @@ export default function TrackOrderPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <GlassCard className="p-8">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-muted mb-6">Order Details</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-muted mb-6">{t.checkout.orderDetails}</h3>
                 <div className="space-y-4 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted">Date</span>
+                    <span className="text-muted">{t.order.date}</span>
                     <span className="font-bold">{new Date(order.created_at).toLocaleDateString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted">{t.order.payment}</span>
                     <span className={cn("font-bold", order.payment_status === 'paid' ? 'text-green-400' : 'text-primary')}>
-                      {(t.order as any)[order.payment_status]}
+                      {(t.order as any)[order.payment_status] || order.payment_status}
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -172,7 +202,7 @@ export default function TrackOrderPage() {
               </GlassCard>
 
               <GlassCard className="p-8 border-white/5">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-muted mb-6">Items</h3>
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-muted mb-6">{t.cart.items}</h3>
                 <ul className="space-y-3 mb-6">
                   {order.order_items.map((i: any) => (
                     <li key={i.id} className="flex justify-between text-xs">
@@ -183,7 +213,7 @@ export default function TrackOrderPage() {
                 </ul>
                 <div className="h-px bg-white/5 my-3" />
                 <div className="flex justify-between items-center font-black">
-                  <span>Total</span>
+                  <span>{t.cart.total}</span>
                   <span className="text-xl text-primary">{formatPrice(order.total)}</span>
                 </div>
               </GlassCard>

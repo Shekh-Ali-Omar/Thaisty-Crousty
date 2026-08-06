@@ -1,13 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { BottomNav } from "@/components/BottomNav";
 import { StickyCartButton } from "@/components/StickyCartButton";
 import { CartDrawer } from "@/components/CartDrawer";
 import { Footer } from "@/components/Footer";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { scrollYProgress } = useScroll();
@@ -41,7 +39,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <StickyCartButton />
       <CartDrawer />
       <BottomNav />
-      <WhatsAppButton />
       <Footer />
     </>
   );

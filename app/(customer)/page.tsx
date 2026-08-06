@@ -19,7 +19,6 @@ import { useLocale } from "@/components/locale-provider";
 import { Button } from "@/components/ui/button";
 import { FeaturedCarousel } from "@/components/FeaturedCarousel";
 import { GlassCard } from "@/components/glass/GlassCard";
-import { BRAND_NAME, BRAND_SUBTITLE } from "@/lib/constants";
 import { getFeaturedProducts } from "@/lib/products/repository";
 import type { Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -29,8 +28,8 @@ export default function HomePage() {
   const [featured, setFeatured] = useState<Product[]>([]);
 
   useEffect(() => {
-    getFeaturedProducts().then(setFeatured);
-  }, []);
+    getFeaturedProducts(locale).then(setFeatured);
+  }, [locale]);
 
   return (
     <div className="flex flex-col gap-24 pb-20">
@@ -79,7 +78,7 @@ export default function HomePage() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="mt-6 max-w-md text-lg text-muted/80 font-medium leading-relaxed"
+            className="mt-6 max-w-xl text-lg md:text-2xl text-muted/80 font-medium leading-relaxed"
           >
             {t.home.subtitle}
           </motion.p>

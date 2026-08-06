@@ -94,14 +94,21 @@
       "vision": {
         "title": "Culinary Vision",
         "desc": "Constantly innovating new flavors to keep your taste buds excited."
-      }
+      },
+      "title": "Our Elite Values"
     },
     "cta": {
       "title": "Ready to join the elite?",
       "desc": "Discover the crunch that everyone is talking about. Your premium experience is just one click away.",
       "button": "Explore Our Menu"
     },
-    "quote": "Quality is not an act, it is a habit."
+    "quote": "Quality is not an act, it is a habit.",
+    "stats": {
+      "fans": "Happy Fans",
+      "spices": "Secret Spices",
+      "recipes": "Artisanal Recipes",
+      "chefs": "Elite Chefs"
+    }
   },
   "contact": {
     "title": "Let's Connect.",
@@ -112,6 +119,10 @@
     "hoursVal": "Everyday: 11:00 AM - 11:00 PM",
     "location": "Our Location",
     "locationVal": "Rue 11 Decembre 1960, Dely Ibrahim, Algiers",
+    "direct_channels": "Direct Channels",
+    "send_message": "Send us a message",
+    "restaurant_location": "Restaurant Location",
+    "get_directions": "Get Directions",
     "form": {
       "name": "Your Name",
       "email": "Your Email",
@@ -199,7 +210,7 @@
     "note": "Note",
     "notePlaceholder": "Extra sauce, no onions…",
     "viewCart": "View cart",
-    "items": "items",
+    "items": "Items",
     "summary": "Order Summary",
     "subtotal": "Subtotal",
     "delivery": "Delivery",
@@ -238,6 +249,7 @@
   "order": {
     "success": "Order Submitted Successfully",
     "number": "Order Number",
+    "date": "Date",
     "eta": "Estimated Prep Time",
     "etaVal": "20-30 minutes",
     "summary": "Order Summary",
@@ -271,7 +283,51 @@
   "profile": {
     "title": "Profile",
     "language": "Language",
-    "admin": "Admin dashboard"
+    "admin": "Admin dashboard",
+    "appearance": "Appearance",
+    "interface_desc": "Customize your premium street food experience.",
+    "interface_system": "Visual System",
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "save": "Save Changes",
+    "saved": "Saved",
+    "authorized": "Authorized",
+    "management": "Management",
+    "dashboard_desc": "Access logistics and analytics control center.",
+    "continue_shopping": "Continue Shopping",
+    "identity_required": "Identity Required",
+    "identity_desc": "Sign in to sync your orders, addresses, and premium preferences.",
+    "management_login": "Management Login",
+    "logistics": "Logistics",
+    "track_desc": "Identify and follow your active logistics.",
+    "archive": "Archive Manifest",
+    "archive_desc": "Historical data sync coming soon.",
+    "configuration": "Configuration",
+    "global_protocol": "Global Protocol",
+    "visual_system": "Visual System",
+    "visual_desc": "Interface aesthetics will adapt to your selection.",
+    "drop_point": "Drop Point Defaults",
+    "contact_logic": "Contact Logic",
+    "base_destination": "Base Destination",
+    "authorize_changes": "Authorize Changes"
+  },
+  "product": {
+    "description": "Description",
+    "description_fallback": "Every ingredient is selected for maximum crunch and artisanal flavor. A true street food masterpiece crafted with care.",
+    "market_description": "Market Description",
+    "premium_selection": "Premium Selection",
+    "in_stock": "In Stock & Ready",
+    "authorized_listing": "Authorized Listing",
+    "culinary_composition": "Culinary Composition",
+    "flash_service": "Flash Service",
+    "market_rating": "Market Rating",
+    "configure_volume": "Configure Volume",
+    "selection_added": "Selection Added",
+    "authorized": "Authorized",
+    "platform_footer": "Thaisty Crousty - Premium Street Food Algiers"
   },
   "admin": {
     "login": "Admin login",
@@ -294,13 +350,53 @@
     "image": "Image",
     "status": "Status",
     "orderDetails": "Order details",
-    "noOrders": "No orders yet"
+    "noOrders": "No orders yet",
+    "order_stream": "Order Stream",
+    "order_desc": "Real-time order processing and fulfillment.",
+    "all_statuses": "All Statuses",
+    "syncing": "Syncing Live Stream...",
+    "identify": "Identify Order # or Name...",
+    "revenue": "Revenue",
+    "active_pipeline": "Active Pipeline",
+    "avg_ticket": "Average Ticket",
+    "fulfillment": "Successful Fulfillment",
+    "live_analytics": "Live Analytics",
+    "performance_desc": "Real-time performance metrics for Thaisty Crousty.",
+    "best_sellers": "Best Sellers",
+    "system_status": "System Status",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
+    "manage_feed": "Manage Feed",
+    "feed_desc": "Step into the live order stream and process client requests.",
+    "lifetime_volume": "LIFETIME VOLUME",
+    "sync_intelligence": "Sync Intelligence",
+    "sync_logic": "Sync Logic",
+    "commit_updates": "Commit Updates",
+    "create_master": "Create Master Asset",
+    "discard": "Discard Changes",
+    "gallery": "Gallery & Visuals",
+    "multilingual": "Multilingual Content",
+    "pricing_strategy": "Pricing Strategy",
+    "marketing": "Marketing & Visibility",
+    "overview": "Overview",
+    "menu_catalog": "Menu Catalog",
+    "alerts": "Alerts",
+    "audit_trail": "Audit Trail",
+    "signed_in_as": "Signed in as",
+    "notification_center": "Notification Center",
+    "audit_desc": "Audit log of system alerts and new orders.",
+    "mark_all_read": "Mark all read",
+    "immutable_record": "Immutable record of all administrative operations.",
+    "retrieving_history": "Retrieving History...",
+    "search_audit": "Search audit logs...",
+    "admin": "Admin"
   },
   "common": {
     "loading": "Loading…",
     "error": "Something went wrong",
     "premium": "Premium",
     "instagram": "Instagram",
-    "facebook": "Facebook"
+    "facebook": "Facebook",
+    "back_to_menu": "Back to Menu"
   }
 }

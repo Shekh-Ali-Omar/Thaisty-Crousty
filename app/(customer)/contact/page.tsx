@@ -24,10 +24,10 @@ export default function ContactPage() {
   const { t, locale } = useLocale();
 
   const socialLinks = [
-    { icon: Camera, label: "Instagram", value: "@thaistycrousty", color: "text-pink-500" },
-    { icon: Share2, label: "Facebook", value: "Thaisty Crousty", color: "text-blue-500" },
-    { icon: MessageCircle, label: "WhatsApp", value: WHATSAPP_NUMBER, color: "text-green-500" },
-    { icon: Phone, label: "Call Us", value: "+213 555 123 456", color: "text-primary" },
+    { icon: Camera, label: t.common.instagram, value: "@thaistycrousty", color: "text-pink-500" },
+    { icon: Share2, label: t.common.facebook, value: "Thaisty Crousty", color: "text-blue-500" },
+    { icon: MessageCircle, label: t.contact.whatsapp, value: WHATSAPP_NUMBER, color: "text-green-500" },
+    { icon: Phone, label: t.contact.callUs, value: "+213 555 123 456", color: "text-primary" },
   ];
 
   return (
@@ -60,11 +60,11 @@ export default function ContactPage() {
         {/* Contact Info & Socials (5 columns) */}
         <div className="lg:col-span-5 flex flex-col gap-10">
           <div className="flex flex-col gap-6">
-            <h2 className="text-2xl md:text-4xl font-black tracking-tight">Direct Channels</h2>
+            <h2 className="text-2xl md:text-4xl font-black tracking-tight">{t.contact.direct_channels}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {socialLinks.map((social, i) => (
                 <GlassCard key={i} className="p-6 flex flex-col gap-4 group hover:border-primary/30 transition-all border-white/5">
-                  <div className={cn("h-12 w-12 rounded-xl bg-white/5 flex items-center justify-center transition-transform group-hover:scale-110", social.color)}>
+                  <div className={cn("h-12 w-12 rounded-xl bg-background/5 flex items-center justify-center transition-transform group-hover:scale-110", social.color)}>
                     <social.icon className="h-6 w-6" />
                   </div>
                   <div>
@@ -101,7 +101,7 @@ export default function ContactPage() {
         {/* Contact Form (7 columns) */}
         <div className="lg:col-span-7">
           <GlassCard className="p-8 md:p-12 border-white/10 shadow-[0_30px_100px_rgba(0,0,0,0.5)] rounded-[3rem]">
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-10">Send us a message</h2>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-10">{t.contact.send_message}</h2>
             <form className="flex flex-col gap-8" onSubmit={(e) => e.preventDefault()}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
@@ -142,13 +142,13 @@ export default function ContactPage() {
             </div>
           </div>
           {/* Decorative Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
           <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 w-full max-w-sm px-6">
             <GlassCard className="p-6 text-center border-white/10 backdrop-blur-3xl shadow-2xl">
-              <p className="text-sm text-muted font-bold uppercase tracking-widest mb-3">Restaurant Location</p>
+              <p className="text-sm text-muted font-bold uppercase tracking-widest mb-3">{t.contact.restaurant_location}</p>
               <p className="font-black text-lg mb-6">{t.contact.locationVal}</p>
               <Button className="w-full h-12 rounded-xl bg-primary text-black font-black shadow-lg">
-                Get Directions
+                {t.contact.get_directions}
               </Button>
             </GlassCard>
           </div>

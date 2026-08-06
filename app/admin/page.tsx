@@ -2,17 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { 
-  Package, 
   TrendingUp, 
   DollarSign, 
-  Calendar,
-  ArrowRight,
   RefreshCw,
   ShoppingBag,
   Star,
   Clock,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Activity
 } from "lucide-react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { createClient } from "@/lib/supabase/client";
@@ -21,6 +19,7 @@ import { formatPrice, cn } from "@/lib/utils";
 import { GlassCard } from "@/components/glass/GlassCard";
 import { AnalyticsCharts } from "@/components/admin/AnalyticsCharts";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/components/locale-provider";
 
 type AnalyticsData = {
   revenue: {
@@ -42,6 +41,7 @@ type AnalyticsData = {
 };
 
 export default function AdminPage() {
+  const { t } = useLocale();
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -50,7 +50,6 @@ export default function AdminPage() {
     const supabase = createClient();
     
     try {
-      // 1. Fetch ALL orders for processing (In a large SaaS, we'd use aggregation queries or Edge Functions)
       const { data: orders, error } = await supabase
         .from("orders")
         .select("*, order_items(*)")
@@ -71,7 +70,6 @@ export default function AdminPage() {
       const productCounts: Record<string, number> = {};
       const trendMap: Record<string, { revenue: number; orders: number }> = {};
 
-      // Initialize trend map for last 14 days
       for (let i = 13; i >= 0; i--) {
         const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
         const s = d.toISOString().split('T')[0];
@@ -83,26 +81,22 @@ export default function AdminPage() {
         const orderDateStr = o.created_at.split('T')[0];
         const val = Number(o.total);
 
-        // Status counts
         if (o.status === 'pending') ordPending++;
         if (o.status === 'confirmed') ordConfirmed++;
         if (o.status === 'delivered') ordDelivered++;
         if (o.status === 'cancelled') ordCancelled++;
 
-        // Revenue calculations (Excluding cancelled for money)
         if (o.status !== 'cancelled') {
           revTotal += val;
           if (orderDateStr === todayStr) revToday += val;
           if (orderDate >= weekAgo) revWeek += val;
           if (orderDate >= monthAgo) revMonth += val;
           
-          // Trends
           if (trendMap[orderDateStr]) {
             trendMap[orderDateStr].revenue += val;
             trendMap[orderDateStr].orders += 1;
           }
 
-          // Product performance
           o.order_items.forEach((oi: any) => {
             productCounts[oi.product_name] = (productCounts[oi.product_name] || 0) + oi.quantity;
           });
@@ -144,10 +138,10 @@ export default function AdminPage() {
   }, []);
 
   const metrics = [
-    { label: "Today's Revenue", value: formatPrice(data?.revenue.today ?? 0), icon: DollarSign, color: "text-green-400" },
-    { label: "Pending Requests", value: data?.orders.pending ?? 0, icon: Clock, color: "text-orange-400" },
-    { label: "Confirmed Orders", value: data?.orders.confirmed ?? 0, icon: CheckCircle2, color: "text-blue-400" },
-    { label: "Avg. Ticket", value: formatPrice(data?.aov ?? 0), icon: TrendingUp, color: "text-purple-400" },
+    { label: t.admin.revenue, value: formatPrice(data?.revenue.today ?? 0), icon: DollarSign, color: "text-green-400" },
+    { label: t.admin.active_pipeline, value: (data?.orders.pending ?? 0) + (data?.orders.confirmed ?? 0), icon: Clock, color: "text-orange-400" },
+    { label: t.admin.fulfillment, value: data?.orders.delivered ?? 0, icon: CheckCircle2, color: "text-blue-400" },
+    { label: t.admin.avg_ticket, value: formatPrice(data?.aov ?? 0), icon: TrendingUp, color: "text-purple-400" },
   ];
 
   return (
@@ -156,12 +150,12 @@ export default function AdminPage() {
       
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div>
-          <h1 className="text-5xl font-black tracking-tighter text-gradient">Live Analytics</h1>
-          <p className="text-muted font-medium mt-2">Real-time performance metrics for Thaisty Crousty.</p>
+          <h1 className="text-5xl font-black tracking-tighter text-gradient">{t.admin.live_analytics}</h1>
+          <p className="text-muted font-medium mt-2">{t.admin.performance_desc}</p>
         </div>
         <Button onClick={loadAnalytics} variant="glass" className="h-14 px-8 rounded-2xl gap-3 font-black transition-all hover:scale-105 active:scale-95">
           <RefreshCw className={cn("h-5 w-5", loading && "animate-spin")} />
-          Sync Intelligence
+          {t.admin.sync_intelligence}
         </Button>
       </header>
 
@@ -188,7 +182,7 @@ export default function AdminPage() {
         {/* Sales Performance Stats */}
         <section className="lg:col-span-4 flex flex-col gap-6">
           <h2 className="text-2xl font-black tracking-tight px-2 flex items-center gap-3">
-            <Star className="h-6 w-6 text-primary" /> Top Performers
+            <Star className="h-6 w-6 text-primary" /> {t.admin.best_sellers}
           </h2>
           <GlassCard className="p-8 border-white/5 flex flex-col gap-6 h-full rounded-[3rem] glass-strong">
             {loading ? (
@@ -217,7 +211,7 @@ export default function AdminPage() {
         {/* Status Hub */}
         <section className="lg:col-span-8 flex flex-col gap-6">
           <h2 className="text-2xl font-black tracking-tight px-2 flex items-center gap-3">
-            <AlertCircle className="h-6 w-6 text-primary" /> Fulfillment Hub
+            <AlertCircle className="h-6 w-6 text-primary" /> {t.admin.system_status}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <GlassCard className="p-8 flex flex-col gap-6 border-white/5">
@@ -227,7 +221,7 @@ export default function AdminPage() {
                 </div>
                 <div className="text-right">
                   <p className="text-3xl font-black tracking-tighter">{data?.orders.delivered ?? 0}</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted">Delivered</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted">{t.admin.delivered}</p>
                 </div>
               </div>
               <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
@@ -242,7 +236,7 @@ export default function AdminPage() {
                 </div>
                 <div className="text-right">
                   <p className="text-3xl font-black tracking-tighter">{data?.orders.cancelled ?? 0}</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted">Cancelled</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted">{t.admin.cancelled}</p>
                 </div>
               </div>
               <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
@@ -253,7 +247,7 @@ export default function AdminPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
              <GlassCard className="p-10 border-white/5 flex flex-col gap-4 bg-primary/5 hover:border-primary/20 transition-all group">
-                <h3 className="text-xl font-black">Period Volume</h3>
+                <h3 className="text-xl font-black">{t.admin.sync_intelligence}</h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-2xl font-black tracking-tighter">{data?.revenue.week ? formatPrice(data.revenue.week) : '0 DA'}</p>
@@ -267,7 +261,7 @@ export default function AdminPage() {
              </GlassCard>
              <GlassCard className="p-10 border-white/5 flex flex-col items-center justify-center text-center gap-2">
                 <p className="text-5xl font-black tracking-tighter text-gradient">{data?.orders.total ?? 0}</p>
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted">Total Lifetime Orders</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted">{t.admin.lifetime_volume}</p>
              </GlassCard>
           </div>
         </section>

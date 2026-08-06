@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { GlassCard } from "@/components/glass/GlassCard";
 import { useHydrated } from "@/lib/hooks";
+import { toast } from "sonner";
 
 type Step = 1 | 2 | 3;
 
@@ -81,6 +82,17 @@ export default function CheckoutPage() {
     setSubmitting(true);
     setError(null);
     try {
+      // Fetch restaurant status
+      const statusRes = await fetch("/api/restaurant-status");
+      const statusData = await statusRes.json();
+
+      if (!statusData.isOpen) {
+        toast.error(statusData.message || "Restaurant is closed.");
+        setError(statusData.message || "Restaurant is closed.");
+        setSubmitting(false);
+        return;
+      }
+
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

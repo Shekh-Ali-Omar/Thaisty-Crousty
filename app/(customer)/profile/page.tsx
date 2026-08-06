@@ -1,49 +1,47 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   User, 
-  Mail, 
-  Settings, 
-  LogOut, 
   Shield, 
-  ShoppingBag, 
-  Clock,
-  ChevronRight
+  Palette,
+  Globe,
+  Check,
+  ChevronRight,
+  ShoppingBag
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { useLocale } from "@/components/locale-provider";
 import { GlassCard } from "@/components/glass/GlassCard";
-import { Button } from "@/components/ui/button";
 import { useHydrated } from "@/lib/hooks";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { useLocale } from "@/components/locale-provider";
 
 export default function ProfilePage() {
-  const { t, locale } = useLocale();
-  const router = useRouter();
   const isHydrated = useHydrated();
-  const [user, setUser] = useState<any>(null);
+  const { t, locale, setLocale } = useLocale();
+  
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const supabase = createClient();
-    async function getSession() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
+    async function checkAuth() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("is_admin")
+          .eq("id", user.id)
+          .single();
+        setIsAdmin(!!profile?.is_admin);
       }
       setLoading(false);
     }
-    getSession();
+    checkAuth();
   }, []);
-
-  const handleSignOut = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/");
-    router.refresh();
-  };
 
   if (!isHydrated || loading) {
     return (
@@ -53,102 +51,97 @@ export default function ProfilePage() {
     );
   }
 
-  // Not logged in view
-  if (!user) {
-    return (
-      <div className="mx-auto max-w-2xl py-20 px-4 text-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
-          <div className="h-24 w-24 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-8">
-            <User className="h-12 w-12 text-muted" />
-          </div>
-          <h1 className="text-4xl font-black tracking-tight mb-4">Your Profile</h1>
-          <p className="text-muted text-lg mb-10">Sign in to manage your orders and account settings.</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="h-14 px-10 rounded-2xl bg-primary text-black font-black shadow-lg">
-              <Link href="/admin/login">Admin Access</Link>
-            </Button>
-            <Button asChild variant="glass" size="lg" className="h-14 px-10 rounded-2xl font-bold">
-              <Link href="/">Back to Home</Link>
-            </Button>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
-
   return (
-    <div className="mx-auto max-w-4xl py-10 px-4 flex flex-col gap-10">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row items-center gap-8 bg-white/5 p-8 rounded-[3rem] border border-white/5">
+    <div className="mx-auto max-w-3xl py-10 px-4 flex flex-col gap-10">
+      {/* Simple Header */}
+      <div className="flex flex-col items-center text-center gap-6">
         <div className="h-24 w-24 rounded-[2rem] bg-primary/10 flex items-center justify-center border border-primary/20">
           <User className="h-12 w-12 text-primary glow-primary" />
         </div>
-        <div className="flex-1 text-center md:text-left">
-          <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-gradient mb-1">
-            Hello, {user.email?.split('@')[0]}
+        <div>
+          <h1 className="text-4xl font-black tracking-tight text-gradient-white uppercase">
+            {t.profile.title}
           </h1>
-          <p className="text-muted font-medium flex items-center justify-center md:justify-start gap-2">
-            <Mail className="h-4 w-4" /> {user.email}
-          </p>
+          <p className="text-muted font-medium mt-2">{t.profile.interface_desc}</p>
         </div>
-        <Button onClick={handleSignOut} variant="glass" className="h-12 rounded-xl text-red-400 border-red-400/10 hover:bg-red-400/5">
-          <LogOut className="h-4 w-4 mr-2" />
-          {t.admin.signOut}
-        </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-        {/* Main Content */}
-        <div className="md:col-span-8 flex flex-col gap-6">
-          <h2 className="text-xl font-black uppercase tracking-widest text-muted ms-2">Your Activity</h2>
+      <div className="grid grid-cols-1 gap-8">
+        {/* Language Switcher */}
+        <section className="space-y-6">
+          <div className="flex items-center gap-3 px-2">
+            <Globe className="h-5 w-5 text-primary" />
+            <h2 className="text-xl font-black uppercase tracking-[0.3em] text-white/40">{t.profile.language}</h2>
+          </div>
           
-          <Link href="/track-order">
-            <GlassCard className="p-8 flex items-center gap-6 group hover:border-primary/20 transition-all border-white/5">
-              <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Clock className="h-7 w-7 text-primary glow-primary" />
-              </div>
-              <div className="flex-1">
-                <p className="text-lg font-black">{t.nav.track}</p>
-                <p className="text-sm text-muted">View status of your current orders.</p>
-              </div>
-              <ChevronRight className="h-6 w-6 text-muted group-hover:text-primary transition-colors" />
-            </GlassCard>
-          </Link>
-
-          <GlassCard className="p-8 flex items-center gap-6 border-white/5 opacity-50 cursor-not-allowed">
-            <div className="h-14 w-14 rounded-2xl bg-white/5 flex items-center justify-center">
-              <ShoppingBag className="h-7 w-7 text-muted" />
-            </div>
-            <div className="flex-1">
-              <p className="text-lg font-black">Order History</p>
-              <p className="text-sm text-muted">Coming soon in the next update.</p>
+          <GlassCard className="p-8 border-white/5 shadow-2xl">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                { id: "en", label: "English" },
+                { id: "fr", label: "Français" },
+                { id: "ar", label: "العربية" }
+              ].map((lang) => (
+                <button
+                  key={lang.id}
+                  onClick={() => setLocale(lang.id as any)}
+                  className={cn(
+                    "flex flex-col items-center gap-2 p-6 rounded-2xl transition-all border",
+                    locale === lang.id 
+                      ? "bg-primary text-black border-primary shadow-lg scale-105" 
+                      : "glass border-white/5 text-muted hover:text-white"
+                  )}
+                >
+                  <span className="font-black uppercase text-[10px] tracking-widest">{lang.label}</span>
+                  {locale === lang.id && <Check className="h-4 w-4" />}
+                </button>
+              ))}
             </div>
           </GlassCard>
-        </div>
+        </section>
 
-        {/* Sidebar */}
-        <div className="md:col-span-4 flex flex-col gap-6">
-          <h2 className="text-xl font-black uppercase tracking-widest text-muted ms-2">Account</h2>
-          <GlassCard className="p-6 flex flex-col gap-4 border-white/5">
-            <Button asChild variant="ghost" className="justify-start h-12 rounded-xl hover:bg-white/5">
-              <Link href="/admin" className="flex items-center gap-3">
-                <Shield className="h-5 w-5 text-primary" />
-                <span className="font-bold">{t.profile.admin}</span>
-              </Link>
-            </Button>
-            <Button variant="ghost" className="justify-start h-12 rounded-xl hover:bg-white/5 opacity-50 cursor-not-allowed">
-              <Settings className="h-5 w-5" />
-              <span className="font-bold">Settings</span>
-            </Button>
-          </GlassCard>
-        </div>
+        {/* Navigation Utilities */}
+        <section className="space-y-6">
+           <Link href="/menu">
+                <GlassCard className="p-8 flex items-center justify-between group hover:border-primary/30 transition-all border-white/5">
+                    <div className="flex items-center gap-6">
+                        <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                            <ShoppingBag className="h-8 w-8 text-primary glow-primary" />
+                        </div>
+                        <div>
+                            <p className="text-xl font-black tracking-tight">{t.menu.viewAll}</p>
+                            <p className="text-sm text-muted">{t.profile.continue_shopping}</p>
+                        </div>
+                    </div>
+                    <ChevronRight className="h-6 w-6 text-white/20 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                </GlassCard>
+            </Link>
+        </section>
+
+        {/* Conditional Admin Hub */}
+        {isAdmin && (
+          <section className="space-y-6">
+            <div className="flex items-center gap-3 px-2">
+              <Shield className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-black uppercase tracking-[0.3em] text-white/40">{t.profile.management}</h2>
+            </div>
+            
+            <Link href="/admin">
+                <GlassCard className="p-8 flex items-center justify-between group hover:border-primary/30 transition-all border-white/5">
+                    <div className="flex items-center gap-6">
+                        <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
+                            <Shield className="h-8 w-8 text-primary glow-primary" />
+                        </div>
+                        <div>
+                            <p className="text-xl font-black tracking-tight">{t.profile.admin}</p>
+                            <p className="text-sm text-muted">{t.profile.dashboard_desc}</p>
+                        </div>
+                    </div>
+                    <Badge className="bg-primary text-black font-black uppercase text-[10px] tracking-widest px-3">{t.profile.authorized}</Badge>
+                </GlassCard>
+            </Link>
+          </section>
+        )}
       </div>
     </div>
   );
 }
-
-// Minimal missing Link import fix
-import Link from "next/link";

@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { logAction } from "@/lib/admin/activity";
+import { useLocale } from "@/components/locale-provider";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -20,6 +21,7 @@ const loginSchema = z.object({
 type LoginValues = z.infer<typeof loginSchema>;
 
 function LoginForm() {
+  const { t } = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
@@ -55,12 +57,12 @@ function LoginForm() {
     <div className="flex min-h-[70vh] items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Admin login</CardTitle>
+          <CardTitle>{t.admin.login}</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t.admin.email}</Label>
               <Input
                 id="email"
                 type="email"
@@ -70,7 +72,7 @@ function LoginForm() {
               />
             </div>
             <div>
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t.admin.password}</Label>
               <Input
                 id="password"
                 type="password"
@@ -81,7 +83,7 @@ function LoginForm() {
             </div>
             {error && <p className="text-sm text-red-400">{error}</p>}
             <Button type="submit" disabled={isSubmitting} size="lg">
-              Sign in
+              {t.admin.signIn}
             </Button>
           </form>
         </CardContent>
@@ -91,8 +93,9 @@ function LoginForm() {
 }
 
 export default function AdminLoginPage() {
+  const { t } = useLocale();
   return (
-    <Suspense fallback={<p className="text-center text-muted py-12">Loading…</p>}>
+    <Suspense fallback={<p className="text-center text-muted py-12">{t.common.loading}</p>}>
       <LoginForm />
     </Suspense>
   );

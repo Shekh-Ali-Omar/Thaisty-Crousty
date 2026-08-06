@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
+import { useLocale } from "@/components/locale-provider";
 
 interface ActivityLog {
   id: string;
@@ -21,6 +22,7 @@ interface ActivityLog {
 }
 
 export default function ActivityPage() {
+  const { t } = useLocale();
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -46,7 +48,7 @@ export default function ActivityPage() {
   const columns: ColumnDef<ActivityLog>[] = [
     {
       accessorKey: "admin_email",
-      header: "Admin",
+      header: t.admin.admin,
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <User className="h-3 w-3 text-muted" />
@@ -103,8 +105,8 @@ export default function ActivityPage() {
 
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-gradient">Audit Trail</h1>
-          <p className="text-muted font-medium mt-1">Immutable record of all administrative operations.</p>
+          <h1 className="text-4xl font-black tracking-tight text-gradient">{t.admin.audit_trail}</h1>
+          <p className="text-muted font-medium mt-1">{t.admin.immutable_record}</p>
         </div>
         <Button onClick={load} variant="glass" size="icon" className="h-12 w-12 rounded-xl">
           <RefreshCw className={cn("h-5 w-5", loading && "animate-spin")} />
@@ -114,10 +116,10 @@ export default function ActivityPage() {
       {loading && logs.length === 0 ? (
         <div className="py-20 text-center glass rounded-[3rem]">
           <RefreshCw className="h-12 w-12 animate-spin mx-auto text-primary mb-4" />
-          <p className="text-muted font-black uppercase tracking-widest text-[10px]">Retrieving History...</p>
+          <p className="text-muted font-black uppercase tracking-widest text-[10px]">{t.admin.retrieving_history}</p>
         </div>
       ) : (
-        <DataTable columns={columns} data={logs} searchKey="description" placeholder="Search audit logs..." />
+        <DataTable columns={columns} data={logs} searchKey="description" placeholder={t.admin.search_audit} />
       )}
     </div>
   );

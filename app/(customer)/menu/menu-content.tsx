@@ -9,12 +9,12 @@ import { CategoryFilter } from "@/components/CategoryFilter";
 import { useLocale } from "@/components/locale-provider";
 import { Input } from "@/components/ui/input";
 import type { Product } from "@/lib/types";
-import { getProducts } from "@/lib/products/repository";
+import { fetchProducts } from "@/lib/products/fetch";
 import { useCartStore } from "@/store/cartStore";
 import { useHydrated } from "@/lib/hooks";
 
 export function MenuContent() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const searchParams = useSearchParams();
   const isHydrated = useHydrated();
   const openCart = useCartStore((s) => s.openCart);
@@ -22,21 +22,31 @@ export function MenuContent() {
   
   const [products, setProducts] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [category, setCategory] = useState(
+    searchParams.get("category") ?? "all"
+  );
   const [loading, setLoading] = useState(true);
 
-  const category = searchParams.get("category") ?? "all";
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (cat) setCategory(cat);
+  }, [searchParams]);
 
   useEffect(() => {
-    getProducts()
+    fetchProducts(locale)
       .then(setProducts)
       .finally(() => setLoading(false));
-  }, []);
+  }, [locale]);
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
-      const matchesCategory = category === "all" || p.category.toLowerCase() === category;
-      const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           p.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      const pCategory = p.category?.toLowerCase() || "";
+      const pName = p.name?.toLowerCase() || "";
+      const pDescription = p.description?.toLowerCase() || "";
+      const q = searchQuery.toLowerCase();
+
+      const matchesCategory = category === "all" || pCategory === category;
+      const matchesSearch = pName.includes(q) || pDescription.includes(q);
       return matchesCategory && matchesSearch;
     });
   }, [products, category, searchQuery]);
@@ -90,7 +100,7 @@ export function MenuContent() {
             <SlidersHorizontal className="h-4 w-4 text-primary" />
             <span className="text-[10px] font-black uppercase tracking-widest text-muted">{t.menu.filter}</span>
           </div>
-          <CategoryFilter active={category} onChange={() => {}} />
+          <CategoryFilter active={category} onChange={setCategory} />
         </div>
       </div>
 
@@ -115,7 +125,7 @@ export function MenuContent() {
             <p className="text-muted font-medium">Try searching for something else or clearing filters.</p>
           </div>
           <button 
-            onClick={() => {setSearchQuery("");}}
+            onClick={() => {setCategory("all"); setSearchQuery("");}}
             className="h-12 px-8 rounded-2xl bg-primary/10 text-primary font-bold border border-primary/20 hover:bg-primary/20 transition-colors"
           >
             {t.menu.clearFilters}

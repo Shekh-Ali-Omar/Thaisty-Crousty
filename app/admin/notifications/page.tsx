@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useLocale } from "@/components/locale-provider";
 
 interface Notification {
   id: string;
@@ -21,6 +22,7 @@ interface Notification {
 }
 
 export default function NotificationsPage() {
+  const { t } = useLocale();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,10 +44,9 @@ export default function NotificationsPage() {
   useEffect(() => {
     load();
 
-    // REALTIME SUBSCRIPTION
     const supabase = createClient();
     const channel = supabase
-      .channel("notifications-live")
+      .channel("notifications-live-v2")
       .on(
         "postgres_changes",
         {
@@ -54,8 +55,6 @@ export default function NotificationsPage() {
           table: "admin_notifications"
         },
         (payload) => {
-          console.log("[REALTIME_NOTIFICATION]:", payload);
-          
           if (payload.eventType === "INSERT") {
             setNotifications(prev => [payload.new as Notification, ...prev]);
           } else if (payload.eventType === "UPDATE") {
@@ -75,7 +74,6 @@ export default function NotificationsPage() {
   const markAsRead = async (id: string) => {
     const supabase = createClient();
     await supabase.from("admin_notifications").update({ is_read: true }).eq("id", id);
-    // State update handled by realtime listener if enabled, but local update ensures speed
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
   };
 
@@ -102,8 +100,8 @@ export default function NotificationsPage() {
 
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-gradient">Notification Center</h1>
-          <p className="text-muted font-medium mt-1">Audit log of system alerts and new orders.</p>
+          <h1 className="text-4xl font-black tracking-tight text-gradient">{t.admin.notification_center}</h1>
+          <p className="text-muted font-medium mt-1">{t.admin.audit_desc}</p>
         </div>
         <div className="flex items-center gap-3">
            <Button 
@@ -113,7 +111,7 @@ export default function NotificationsPage() {
             className="h-12 rounded-xl font-bold px-6"
             disabled={!notifications.some(n => !n.is_read)}
           >
-            Mark all read
+            {t.admin.mark_all_read}
           </Button>
           <Button onClick={load} variant="glass" size="icon" className="h-12 w-12 rounded-xl">
             <RefreshCw className={cn("h-5 w-5", loading && "animate-spin")} />
@@ -124,12 +122,12 @@ export default function NotificationsPage() {
       {loading && notifications.length === 0 ? (
         <div className="py-20 text-center glass rounded-[3rem]">
           <RefreshCw className="h-12 w-12 animate-spin mx-auto text-primary mb-4" />
-          <p className="text-muted font-black uppercase tracking-widest text-[10px]">Syncing Alerts...</p>
+          <p className="text-muted font-black uppercase tracking-widest text-[10px]">{t.admin.syncing}</p>
         </div>
       ) : notifications.length === 0 ? (
         <div className="py-20 text-center glass rounded-[3rem] border-dashed border-white/10">
            <Bell className="h-12 w-12 mx-auto text-muted mb-4 opacity-20" />
-           <p className="text-muted font-bold">No notifications yet.</p>
+           <p className="text-muted font-bold">{t.admin.noOrders}</p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -153,7 +151,7 @@ export default function NotificationsPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-1">
                     <h3 className="font-black text-white truncate">{n.title}</h3>
-                    {!n.is_read && <Badge variant="default" className="bg-primary text-black h-4 px-1.5 text-[8px] font-black uppercase">New</Badge>}
+                    {!n.is_read && <Badge variant="default" className="bg-primary text-black h-4 px-1.5 text-[8px] font-black uppercase">NEW</Badge>}
                   </div>
                   <p className="text-xs text-muted font-medium line-clamp-1">{n.message}</p>
                   <p className="text-[9px] text-muted/40 font-bold uppercase tracking-widest mt-2">{new Date(n.created_at).toLocaleString()}</p>

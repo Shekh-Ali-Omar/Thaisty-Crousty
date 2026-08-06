@@ -1,24 +1,23 @@
 import type { Metadata } from "next";
 import { Inter, Cairo } from "next/font/google";
 import { Providers } from "@/components/providers";
+import { ThemeProvider } from "@/components/theme-provider";
 import { BRAND_FULL } from "@/lib/constants";
 import "./globals.css";
 
 const inter = Inter({
-  variable: "--font-inter",
   subsets: ["latin"],
-  display: "swap",
+  variable: "--font-inter",
 });
 
 const cairo = Cairo({
+  subsets: ["arabic"],
   variable: "--font-cairo",
-  subsets: ["arabic", "latin"],
-  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: BRAND_FULL,
-  description: "Commandez Thaisty Crousty — street food premium à Dely Ibrahim",
+  description: "Premium Street Food Experience",
 };
 
 export default function RootLayout({
@@ -29,14 +28,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${cairo.variable} dark h-full`}
+      className={`${inter.variable} ${cairo.variable} h-full`}
       suppressHydrationWarning
     >
       <body
-        className="min-h-full flex flex-col bg-background text-foreground antialiased"
+        className="min-h-full flex flex-col bg-background text-foreground antialiased transition-colors duration-300"
         suppressHydrationWarning
       >
-        <Providers>{children}</Providers>
+        <ThemeProvider>
+          <Providers>{children}</Providers>
+        </ThemeProvider>
       </body>
     </html>
   );
