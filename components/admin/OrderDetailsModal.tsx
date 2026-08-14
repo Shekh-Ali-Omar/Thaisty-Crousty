@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, User, MapPin, Clock, CreditCard, ShoppingBag, Phone, Hash, Calendar, Tag, Printer } from "lucide-react";
+import { X, User, MapPin, Clock, ShoppingBag, Phone, Hash, Calendar, Tag, Printer } from "lucide-react";
 import type { Order, OrderItem, OrderStatus } from "@/lib/types";
 import { ORDER_STATUSES } from "@/lib/constants";
 import { formatPrice, cn } from "@/lib/utils";
@@ -151,7 +151,7 @@ export function OrderDetailsModal({ order, onClose, onStatusUpdate }: Props) {
                   <Printer className="h-4 w-4" />
                   Print Receipt
                 </Button>
-                <Badge variant={statusVariant[order.status] as any} className="h-12 px-6 rounded-full uppercase text-[10px] font-black shadow-2xl border-white/10">
+                <Badge variant={statusVariant[order.status] as "default" | "secondary" | "success" | "warning" | "destructive"} className="h-12 px-6 rounded-full uppercase text-[10px] font-black shadow-2xl border-white/10">
                   {t.order.statuses[order.status] || order.status}
                 </Badge>
                 <Button 
@@ -213,7 +213,7 @@ export function OrderDetailsModal({ order, onClose, onStatusUpdate }: Props) {
                         )}
                         onClick={() => onStatusUpdate(order.id, s)}
                       >
-                        {(t.order.statuses as any)[s] || s}
+                        {(t.order.statuses as Record<string, string>)[s] || s}
                       </Button>
                     ))}
                   </div>
@@ -266,7 +266,7 @@ export function OrderDetailsModal({ order, onClose, onStatusUpdate }: Props) {
                         <div className="flex justify-between items-center px-4">
                             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">{t.order.payment}</span>
                             <Badge variant={order.payment_status === 'paid' ? 'success' : 'warning'} className="h-8 px-5 rounded-full uppercase text-[10px] font-black">
-                                {(t.order as any)[order.payment_status] || order.payment_status}
+                                {(t.order as unknown as Record<string, string>)[order.payment_status] || order.payment_status}
                             </Badge>
                         </div>
                     </div>

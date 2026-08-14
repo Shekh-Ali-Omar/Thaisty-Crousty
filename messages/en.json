@@ -16,39 +16,63 @@
     "cta": "Order now",
     "featured": "Popular picks",
     "hero": {
-      "premium": "Dely Ibrahim",
-      "title": "Taste the Premium.",
-      "ourStory": "Our Story",
-      "fastDelivery": "Fast Delivery",
-      "under30": "Under 30 Mins"
+      "kicker": "Thai-Inspired Street Food — Est. 2024",
+      "ingredients": "Jasmine Rice · Crousty Chicken · House Sauces",
+      "sticker": "STREET CERTIFIED ★ BOLD ★",
+      "floating": "No compromise. No bullshit.",
+      "classic": "CLASSIC",
+      "spirit": "100% Thai Spirit",
+      "sideLabel": "Thai-Inspired Street Food"
     },
     "whyUs": {
-      "title": "Popular Picks",
-      "recipes": {
-        "title": "Unique Recipes",
-        "desc": "Secret blends of spices and artisanal techniques you won't find anywhere else."
-      },
-      "service": {
-        "title": "Flash Service",
-        "desc": "Premium doesn't mean slow. We deliver high-end taste in record time."
-      },
-      "quality": {
-        "title": "Elite Quality",
-        "desc": "100% fresh, locally sourced ingredients for the ultimate crunch and flavor."
-      }
+      "title1": "WHY",
+      "title2": "THAISTY",
+      "card1Title": "THAI-INSPIRED SAUCES",
+      "card1Desc": "Curry, sweet, spicy — built in-house, layered thick.",
+      "card2Title": "FRIED TO ORDER",
+      "card2Desc": "Nothing sits under a lamp. Crunch is a deadline, not a promise.",
+      "card3Title": "AT YOUR DOOR HOT",
+      "card3Desc": "Insulated packaging, fast riders, zero soggy coating."
     },
     "testimonials": {
-      "title": "What Our Fans Say",
-      "reviews": [
-        {
-          "name": "Yanis K.",
-          "text": "Best crousty mix in Algiers. The sauce is actually addictive!"
-        },
-        {
-          "name": "Amine S.",
-          "text": "Real premium street food. The presentation is as good as the taste."
-        }
+      "title1": "THE",
+      "title2": "STREET",
+      "title3": "SAYS"
+    },
+    "bowlDrop": {
+      "bestseller": "★ BESTSELLER ★ MAISON ★",
+      "number1": "№1",
+      "fanFavorite": "Fan Favorite",
+      "signature": "The Signature",
+      "title1": "THE",
+      "title2": "BOWL",
+      "title3": "DROP.",
+      "ingredients": [
+        "White rice",
+        "Crousty chicken",
+        "House white sauce",
+        "Fried onions",
+        "Fresh parsley"
       ]
+    },
+    "popular": {
+      "title1": "POPULAR",
+      "title2": "PICKS",
+      "seeAll": "SEE ALL"
+    },
+    "manifesto": {
+      "label": "— Brand Manifesto",
+      "title1": "YOU LOVE",
+      "title2": "IT TODAY.",
+      "title3": "YOU'LL LOVE IT",
+      "title4": "TOMORROW.",
+      "sideLabel": "No compromise. No bullshit."
+    },
+    "faqSection": {
+      "title": "FAQ",
+      "stillStuck": "Still stuck?",
+      "contactUs": "Contact us",
+      "bowlsStart": "bowls start at"
     }
   },
   "menu": {
@@ -63,12 +87,16 @@
     "clearFilters": "Clear all filters",
     "viewAll": "View All Menu",
     "categories": {
+      "bestsellers1": "BEST",
+      "bestsellers2": "SELLERS",
       "all": "All",
       "crousty": "Crousty",
       "spicy": "Spicy",
-      "sweet": "Sweet",
-      "drink": "Drinks"
-    }
+      "sweet": "Sweet"
+    },
+    "findBowl": "FIND YOUR BOWL",
+    "theMenu1": "THE",
+    "theMenu2": "MENU"
   },
   "about": {
     "legacy": "Our Legacy",
@@ -108,7 +136,12 @@
       "spices": "Secret Spices",
       "recipes": "Artisanal Recipes",
       "chefs": "Elite Chefs"
-    }
+    },
+    "manifesto": "MANIFESTO",
+    "thaiFlavor": "THAI FLAVOR.",
+    "streetAttitude1": "STREET",
+    "streetAttitude2": "ATTITUDE.",
+    "marquee": "FRIED TO ORDER • SAUCE HEAVY • NO SOGGY •"
   },
   "contact": {
     "title": "Let's Connect.",
@@ -153,7 +186,16 @@
       "title": "Visit Hours",
       "desc": "Open daily from 11:00 AM to 11:00 PM. Weekends we stay open until midnight for late-night cravings."
     },
-    "follow": "Follow our journey"
+    "follow": "Follow our journey",
+    "kicker": "COME THROUGH",
+    "title1": "FIND",
+    "title2": "US.",
+    "addressLabel": "ADDRESS",
+    "hoursLabel": "HOURS",
+    "hoursValue": "11:00 — 23:30 · EVERY DAY",
+    "openNow": "OPEN NOW",
+    "loadingMap": "LOADING MAP...",
+    "getDirections": "GET DIRECTIONS"
   },
   "faq": {
     "title": "Frequently Asked Questions.",
@@ -216,7 +258,13 @@
     "delivery": "Delivery",
     "deliveryFree": "Free",
     "review": "Review your selection",
-    "secure": "Secure checkout via WhatsApp"
+    "secure": "Secure checkout via WhatsApp",
+    "emptyTitle1": "YOUR",
+    "emptyTitle2": "CART",
+    "emptyTitle3": "IS EMPTY",
+    "crousty": "CROUSTY",
+    "deliveryLabel": "Delivery",
+    "continueShopping": "Continue shopping"
   },
   "checkout": {
     "title": "Checkout",
@@ -244,7 +292,11 @@
       "name": "Name is required",
       "phone": "Valid phone required",
       "address": "Address is required"
-    }
+    },
+    "emptyTitle1": "YOUR",
+    "emptyTitle2": "CART",
+    "emptyTitle3": "IS EMPTY",
+    "continue": "CONTINUE"
   },
   "order": {
     "success": "Order Submitted Successfully",
@@ -398,5 +450,32 @@
     "instagram": "Instagram",
     "facebook": "Facebook",
     "back_to_menu": "Back to Menu"
+  },
+  "productDetails": {
+    "badges": {
+      "bestSeller": "BEST SELLER",
+      "new": "NEW",
+      "spicy": "SPICY"
+    },
+    "chooseSauce": "CHOOSE YOUR SAUCE",
+    "sauces": {
+      "curry": "CURRY",
+      "white": "WHITE",
+      "sweet": "SWEET",
+      "spicy": "SPICY",
+      "mayo": "MAYO"
+    },
+    "actions": {
+      "addToCart": "ADD TO CART",
+      "added": "ADDED!"
+    },
+    "crunchLevel": "CRUNCH LEVEL",
+    "goesHardWith1": "GOES",
+    "goesHardWith2": "HARD",
+    "goesHardWith3": "WITH"
+  },
+  "faqPage": {
+    "kicker": "GOOD QUESTIONS",
+    "stillNeedHelp": "STILL NEED HELP"
   }
 }

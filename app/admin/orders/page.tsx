@@ -8,14 +8,13 @@ import { createClient } from "@/lib/supabase/client";
 import { formatPrice, cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Select } from "@/components/ui/select";
-import { ShoppingBag, User, MapPin, Clock, CreditCard, RefreshCw, Hash, Search, Filter } from "lucide-react";
+import { RefreshCw, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import { logAction } from "@/lib/admin/activity";
 import { OrderDetailsModal } from "@/components/admin/OrderDetailsModal";
 import { GlassCard } from "@/components/glass/GlassCard";
-import { motion, AnimatePresence } from "framer-motion";
 import { useLocale } from "@/components/locale-provider";
 
 type OrderRow = Order & { order_items: OrderItem[] };
@@ -58,6 +57,7 @@ export default function AdminOrdersPage() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
 
     const supabase = createClient();
@@ -127,7 +127,7 @@ export default function AdminOrdersPage() {
       cell: ({ row }) => {
         const s = row.getValue("status") as OrderStatus;
         return (
-          <Badge variant={statusVariant[s] as any} className="uppercase text-[8px] font-black rounded-lg px-2 py-0.5">
+          <Badge variant={statusVariant[s] as "default" | "secondary" | "destructive" | "outline"} className="uppercase text-[8px] font-black rounded-lg px-2 py-0.5">
             {t.order.statuses[s] || s}
           </Badge>
         );
@@ -189,7 +189,7 @@ export default function AdminOrdersPage() {
           >
             <option value="all">{t.admin.all_statuses}</option>
             {ORDER_STATUSES.map(s => (
-              <option key={s} value={s}>{(t.order.statuses as any)[s]?.toUpperCase() || s.toUpperCase()}</option>
+              <option key={s} value={s}>{(t.order.statuses as Record<string, string>)[s]?.toUpperCase() || s.toUpperCase()}</option>
             ))}
           </Select>
           <Button onClick={load} variant="glass" size="icon" className="h-14 w-14 rounded-2xl shadow-xl">

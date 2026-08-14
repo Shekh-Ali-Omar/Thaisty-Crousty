@@ -3,293 +3,337 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
+import { ChevronLeft, Plus, Minus, Check, Flame, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ShoppingBag, Plus, Minus, Star, Clock, Flame, Check, ChevronRight, Sparkles, Share2 } from "lucide-react";
 import { useLocale } from "@/components/locale-provider";
-import { getProductById } from "@/lib/products/repository";
+import { getProductById, getProducts } from "@/lib/products/repository";
 import type { Product } from "@/lib/types";
-import { formatPrice, cn } from "@/lib/utils";
-import { resolveProductGallery, resolveProductImageUrl } from "@/lib/image";
-import { Button } from "@/components/ui/button";
-import { GlassCard } from "@/components/glass/GlassCard";
+import { formatPrice } from "@/lib/utils";
+import { resolveProductImageUrl } from "@/lib/image";
 import { useCartStore } from "@/store/cartStore";
-import { useHydrated } from "@/lib/hooks";
+import { ProductCard } from "@/components/ProductCard";
 
-/**
- * REFINED PRODUCT DETAILS
- * Balanced layout, brand-aligned colors, and working mobile gestures.
- */
+function ChiliIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className}>
+      {/* Slim stem */}
+      <path
+        d="M13.5 2C14.2 1.2 15.6 1 16.8 1.4C16.1 2.4 15 3.2 13.8 3.6"
+        stroke="#0a0a0a"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      {/* Calyx / cap */}
+      <path
+        d="M12.5 3.8C13.8 3.5 15.2 3.8 16 4.8C14.8 5 13.5 4.8 12.5 3.8Z"
+        fill="#0a0a0a"
+      />
+      {/* Long slender curved hot chili body */}
+      <path
+        d="M14.8 4.6C12.8 5.2 9.2 7.2 8.5 11.5C7.8 15.8 9.5 19.2 11.8 22.2C12.4 22.8 13.1 22.4 13 21.6C12.4 18.2 12.5 14.8 13.6 11.4C14.4 9 15.2 6.8 15.5 5.2C15.6 4.8 15.2 4.5 14.8 4.6Z"
+        fill="#0a0a0a"
+      />
+    </svg>
+  );
+}
+
 export default function ProductDetailsPage() {
   const { id } = useParams();
   const router = useRouter();
   const { t, locale } = useLocale();
-  const isHydrated = useHydrated();
   const addItem = useCartStore((s) => s.addItem);
   const openCart = useCartStore((s) => s.openCart);
-  
+
   const [product, setProduct] = useState<Product | null>(null);
+  const [crossSellProducts, setCrossSellProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [sauce, setSauce] = useState("CURRY");
   const [added, setAdded] = useState(false);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   useEffect(() => {
     if (!id) return;
-    getProductById(id as string, locale)
-      .then(setProduct)
+    Promise.all([
+      getProductById(id as string, locale),
+      getProducts(locale)
+    ])
+      .then(([prod, allProducts]) => {
+        setProduct(prod);
+        
+        // Randomize cross-sell products
+        const others = allProducts.filter((p) => p.id !== id);
+        const shuffled = others.sort(() => 0.5 - Math.random());
+        setCrossSellProducts(shuffled.slice(0, 3));
+      })
       .finally(() => setLoading(false));
   }, [id, locale]);
 
   if (loading) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center">
-        <div className="h-16 w-16 animate-spin rounded-full border-8 border-primary/20 border-t-primary" />
+      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+        <div className="h-16 w-16 animate-spin rounded-full border-4 border-[#F58220]/20 border-t-[#F58220]" />
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center gap-10 text-center px-4">
-        <div className="h-32 w-32 rounded-[3rem] bg-white/5 flex items-center justify-center border border-white/10">
-           <Flame className="h-16 w-16 text-muted" />
-        </div>
-        <h1 className="text-3xl font-black tracking-tight uppercase">{t.order.notFound}</h1>
-        <Button size="lg" className="h-14 px-10 rounded-2xl" onClick={() => router.push('/menu')}>{t.common.back_to_menu}</Button>
+      <div className="min-h-[80vh] bg-[#0a0a0a] flex flex-col items-center justify-center gap-10 text-center px-4">
+        <h1 className="t-display text-6xl text-white uppercase">{t.order.notFound}</h1>
+        <button 
+          className="t-btn"
+          onClick={() => router.push('/menu')}
+        >
+          {t.common.back_to_menu}
+        </button>
       </div>
     );
   }
 
-  const images = resolveProductGallery(product.images, product.image_url || product.image);
-  const hasMultipleImages = images.length > 1;
+  const primaryImage = resolveProductImageUrl(product.image_url || product.image);
+  const allImages = [primaryImage, ...(product.images || []).map(img => resolveProductImageUrl(img))].filter(Boolean) as string[];
+  const uniqueImages = Array.from(new Set(allImages));
+  const currentImageUrl = uniqueImages[selectedImageIndex] || primaryImage;
+
   const hasDiscount = product.discount_price !== null && product.discount_price !== undefined;
+  const isSpicy = product.name.toLowerCase().includes('spicy') || product.description?.toLowerCase().includes('spicy');
 
   const handleAddToCart = () => {
     addItem({
       productId: product.id,
       name: product.name,
-      price: Number(product.price),
+      price: Number(product.discount_price ?? product.price),
       image: product.image,
     }, quantity);
-    
+
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
     setTimeout(() => openCart(), 500);
   };
 
-  const nextImage = () => setActiveImageIndex((i) => (i + 1) % images.length);
-  const prevImage = () => setActiveImageIndex((i) => (i - 1 + images.length) % images.length);
-
   return (
-    <div className="max-w-6xl mx-auto w-full px-4 pt-6 md:pt-10 pb-20">
-      <div className="flex items-center justify-between mb-8 px-2">
-          <button 
-            onClick={() => router.back()}
-            className="flex items-center gap-3 text-muted hover:text-primary transition-all font-black uppercase text-[10px] tracking-[0.2em] group"
-          >
-            <div className="h-9 w-9 rounded-full glass flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all">
-                <ChevronLeft className={cn("h-4 w-4", locale === "ar" && "rotate-180")} />
-            </div>
-            {t.checkout.back}
-          </button>
-          
-          <button className="h-9 w-9 rounded-full glass flex items-center justify-center text-muted hover:text-foreground transition-all">
-             <Share2 className="h-3.5 w-3.5" />
-          </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-        {/* Visual Engine */}
-        <div className="lg:col-span-6 flex flex-col gap-6 w-full">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="relative aspect-square w-full rounded-[2.5rem] overflow-hidden glass border-white/5 shadow-2xl group cursor-grab active:cursor-grabbing"
-          >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeImageIndex}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="relative h-full w-full"
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                onDragEnd={(e, { offset }) => {
-                  if (offset.x < -50) nextImage();
-                  else if (offset.x > 50) prevImage();
-                }}
-              >
-                {images[activeImageIndex] ? (
-                  <Image
-                    src={images[activeImageIndex]}
-                    alt={product.name}
-                    fill
-                    className="object-cover pointer-events-none"
-                    priority
-                  />
-                ) : (
-                  <div className="h-full w-full flex items-center justify-center bg-white/5 text-[8rem]">🍗</div>
-                )}
-              </motion.div>
-            </AnimatePresence>
-            
-            {/* Overlays */}
-            <div className="absolute top-6 left-6 flex flex-col gap-3 z-20">
-               <span className="glass px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] text-primary border-primary/20 backdrop-blur-md">
-                  {product.category || "Premium"}
-               </span>
-               {product.is_special_offer && (
-                  <motion.div
-                    initial={{ x: -10, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    className="bg-[#630d16] text-white text-[9px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-lg shadow-lg border border-white/10 flex items-center gap-2 backdrop-blur-md"
-                  >
-                    <Sparkles className="h-3 w-3 fill-current animate-pulse" />
-                    {locale === 'ar' ? 'عرض خاص' : locale === 'fr' ? 'Offre spéciale' : 'Special Offer'}
-                  </motion.div>
-               )}
-            </div>
-
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none opacity-40" />
-
-            {hasMultipleImages && (
-              <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-20 pointer-events-none hidden md:flex">
-                <button 
-                  onClick={prevImage}
-                  className="pointer-events-auto h-12 w-12 rounded-2xl glass flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-white/10 border-white/10"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button 
-                  onClick={nextImage}
-                  className="pointer-events-auto h-12 w-12 rounded-2xl glass flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-white/10 border-white/10"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-              </div>
-            )}
-            
-            {hasMultipleImages && (
-                <div className="absolute bottom-6 inset-x-0 flex justify-center gap-1.5 z-20">
-                    {images.map((_, i) => (
-                        <div 
-                            key={i} 
-                            className={cn(
-                                "h-1 rounded-full transition-all duration-300",
-                                activeImageIndex === i ? "w-6 bg-primary shadow-lg" : "w-1.5 bg-white/20"
-                            )} 
-                        />
-                    ))}
-                </div>
-            )}
-          </motion.div>
-
-          {/* Thumbnails */}
-          {hasMultipleImages && (
-            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none px-1">
-              {images.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveImageIndex(idx)}
-                  className={cn(
-                    "relative h-16 w-16 rounded-xl overflow-hidden border-2 transition-all shrink-0",
-                    activeImageIndex === idx 
-                        ? "border-primary scale-105 shadow-md" 
-                        : "border-white/5 opacity-40 hover:opacity-100"
-                  )}
-                >
-                  <Image src={img} alt={`${product.name} thumbnail ${idx}`} fill className="object-cover" sizes="64px" />
-                </button>
-              ))}
-            </div>
-          )}
+    <div className="min-h-screen bg-[#0a0a0a]">
+      {/* Product Section */}
+      <section className="t-grain border-b-2 border-[#F58220] bg-[#0a0a0a]">
+        
+        {/* Back button */}
+        <div className="w-full mx-auto px-4 md:px-8 pt-4 md:pt-8 relative z-10">
+           <button
+             onClick={() => router.back()}
+             className="flex items-center gap-2 t-kicker text-white/60 hover:text-[#F58220] transition-colors group"
+           >
+             <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1 rtl:group-hover:translate-x-1 rtl:rotate-180" />
+             {t.checkout.back}
+           </button>
         </div>
 
-        {/* Informational Content */}
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-6 flex flex-col gap-8 w-full"
-        >
-          <div className="space-y-4">
-             <div className="flex items-center gap-2 text-success font-black text-[9px] uppercase tracking-[0.3em]">
-                <Check className="h-3 w-3" />
-                {t.product?.authorized_listing || "Authorized Listing"}
-             </div>
-             <h1 className="text-4xl md:text-5xl font-black tracking-tight text-foreground leading-tight">
-                {product.name}
-             </h1>
-             
-             <div className="flex items-end gap-4">
-                <p className="text-4xl font-black tracking-tight text-primary glow-primary">
-                  {formatPrice(Number(product.price))}
-                </p>
-                {hasDiscount && (
-                   <p className="text-lg text-muted font-black line-through mb-1.5 uppercase tracking-wider">
-                      {formatPrice(Number(product.original_price))}
-                   </p>
+        <div className="mx-auto grid w-full gap-8 px-4 py-8 md:grid-cols-[1.15fr_1fr] md:gap-14 md:px-8 md:py-14 relative z-10">
+          
+          {/* GALLERY */}
+          <div className="relative">
+            <div className="aspect-[4/5] w-full overflow-hidden border-2 border-[#1a1a1a] bg-[#111] relative">
+              <AnimatePresence mode="wait">
+                {currentImageUrl ? (
+                  <motion.img
+                    key={currentImageUrl}
+                    src={currentImageUrl}
+                    alt={product.name}
+                    initial={{ opacity: 0, scale: 1.05 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="h-full w-full object-cover object-[50%_78%]"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-8xl">🍗</div>
                 )}
-             </div>
+              </AnimatePresence>
+            </div>
+            
+            {/* BADGES CONTAINER */}
+            <div className="absolute -start-2 top-4 z-20 flex flex-col gap-2 pointer-events-none">
+              {product.is_featured ? (
+                <span className="t-sticker-orange -rotate-3 text-sm md:text-base hover:rotate-0 transition-transform">
+                  <Flame className="h-4 w-4 fill-black text-black" /> {locale === "ar" ? "الأكثر مبيعاً" : locale === "fr" ? "MEILLEURE VENTE" : "BEST SELLER"}
+                </span>
+              ) : product.is_special_offer ? (
+                <span className="t-sticker-mustard -rotate-3 text-sm md:text-base hover:rotate-0 transition-transform">
+                  <Sparkles className="h-4 w-4 fill-black text-black" /> {locale === "ar" ? "جديد" : locale === "fr" ? "NOUVEAU" : "NEW"}
+                </span>
+              ) : (
+                <span className="t-sticker -rotate-3 text-sm md:text-base hover:rotate-0 transition-transform">
+                  ★ {product.category || "CROUSTY"}
+                </span>
+              )}
+              
+              {isSpicy && (
+                <span className="t-sticker-red rotate-2 text-sm md:text-base hover:rotate-0 transition-transform">
+                  <ChiliIcon className="h-4 w-4" /> {locale === "ar" ? "حار" : locale === "fr" ? "PIQUANT" : "SPICY"}
+                </span>
+              )}
+            </div>
+
+            {/* Thumbnail Gallery */}
+            {uniqueImages.length > 1 && (
+              <div className="mt-3 flex gap-3 overflow-x-auto pb-2 scrollbar-none snap-x">
+                {uniqueImages.map((img, i) => (
+                  <motion.div 
+                    key={i} 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSelectedImageIndex(i)}
+                    className={`flex-none snap-start h-20 w-20 border-2 bg-[#111] transition-all cursor-pointer ${
+                      selectedImageIndex === i 
+                        ? "border-[#F58220] opacity-100" 
+                        : "border-[#1a1a1a] opacity-60 hover:opacity-100 hover:border-white"
+                    }`}
+                  >
+                    <img 
+                      src={img} 
+                      className={`h-full w-full object-cover object-[50%_78%] transition-all ${
+                        selectedImageIndex === i ? "grayscale-0 opacity-100" : "grayscale hover:grayscale-0"
+                      }`} 
+                      alt="" 
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </div>
 
-          <GlassCard className="p-6 md:p-8 border-white/5">
-             <h3 className="text-[9px] font-black uppercase tracking-[0.3em] text-muted mb-4">{t.product?.market_description || "Market Description"}</h3>
-             <p className="text-lg text-foreground/80 leading-relaxed font-medium">
-                {product.description || t.product?.description_fallback || "Every ingredient is selected for maximum crunch and artisanal flavor."}
-             </p>
-             
-             <div className="mt-8 grid grid-cols-2 gap-6 pt-6 border-t border-white/5">
-                <div className="flex items-center gap-3">
-                    <Clock className="h-4 w-4 text-primary" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted">{t.order.etaVal}</span>
-                </div>
-                <div className="flex items-center gap-3">
-                    <Star className="h-4 w-4 fill-primary text-primary border-none" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted">{t.product?.market_rating || "Market Rating"}</span>
-                </div>
-             </div>
-          </GlassCard>
+          {/* BUY INFO */}
+          <div className="flex flex-col">
+            <p className="t-kicker text-[#F58220]">
+              {product.category || "Thaisty"}
+            </p>
+            <h1 className="t-display mt-2 text-[14vw] rtl:text-[9vw] leading-[0.8] md:text-[6vw] md:rtl:text-[4vw] text-white">
+              {product.name}
+            </h1>
+            <p className="mt-4 w-full text-lg text-white/50 font-barlow-condensed tracking-wide uppercase leading-relaxed">
+              {product.description || "Poulet authentique avec sauce thaï originale, servi avec des accompagnements frais."}
+            </p>
 
-          <div className="flex flex-col gap-6">
-             <div className="flex flex-col sm:flex-row items-center gap-4">
-                 <div className="flex items-center gap-4 rounded-2xl glass p-2 border-white/10 shadow-inner w-full sm:w-auto justify-between px-6 sm:px-2">
-                    <button
-                      className="h-10 w-10 rounded-xl glass flex items-center justify-center hover:bg-background/10 transition-colors"
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    >
-                      <Minus className="h-5 w-5" />
-                    </button>
-                    <span className="min-w-8 text-center font-black text-2xl tracking-tighter">{quantity}</span>
-                    <button
-                      className="h-10 w-10 rounded-xl glass flex items-center justify-center hover:bg-background/10 transition-colors"
-                      onClick={() => setQuantity(quantity + 1)}
-                    >
-                      <Plus className="h-5 w-5" />
-                    </button>
-                 </div>
+            <div className="mt-6 flex items-baseline gap-3">
+              <span className="t-price text-5xl text-[#F58220]">
+                {formatPrice(Number(product.discount_price ?? product.price))}
+              </span>
+              {hasDiscount && (
+                <span className="t-price-old text-2xl text-white/40 line-through">
+                  {formatPrice(Number(product.price))}
+                </span>
+              )}
+            </div>
 
-                 <Button 
-                    onClick={handleAddToCart}
-                    size="lg" 
-                    disabled={!product.is_available}
-                    className={cn(
-                        "h-14 w-full sm:flex-1 rounded-2xl font-black text-lg shadow-xl hover:scale-102 active:scale-98 transition-all gap-4",
-                        added ? "bg-success text-white" : "bg-primary text-black"
-                    )}
-                 >
-                    {added ? <Check className="h-5 w-5" /> : <ShoppingBag className="h-5 w-5" />}
-                    {added ? t.product?.selection_added || "Selection Added" : t.menu.add}
-                 </Button>
-             </div>
-             
-             <p className="text-[8px] text-center text-muted font-bold uppercase tracking-[0.4em]">
-                {t.product?.platform_footer || "Thaisty Crousty - Premium Street Food Algiers"}
-             </p>
+            {/* Customize: Sauce */}
+            <div className="mt-8">
+              <span className="t-label text-white/50">{locale === "ar" ? "اختر الصلصة الخاصة بك" : locale === "fr" ? "CHOISISSEZ VOTRE SAUCE" : "CHOOSE YOUR SAUCE"}</span>
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none snap-x snap-mandatory mt-2">
+                {["CURRY", "WHITE", "SWEET", "SPICY", "MAYO"].map((s) => {
+                  const isSelected = sauce === s;
+                  const localizedSauce = s === "CURRY" ? (locale === "ar" ? "كاري" : "CURRY") : s === "WHITE" ? (locale === "ar" ? "بيضاء" : locale === "fr" ? "BLANCHE" : "WHITE") : s === "SWEET" ? (locale === "ar" ? "حلوة" : locale === "fr" ? "DOUCE" : "SWEET") : s === "SPICY" ? (locale === "ar" ? "حارة" : locale === "fr" ? "PIQUANTE" : "SPICY") : (locale === "ar" ? "مايونيز" : "MAYO");
+                  return (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setSauce(s)}
+                      aria-pressed={isSelected}
+                      className={`t-btn-quiet shrink-0 snap-center relative transition-colors duration-200 ${
+                        isSelected 
+                          ? "text-[#F58220]" 
+                          : "text-white/70 hover:text-white"
+                      }`}
+                    >
+                      {localizedSauce}
+                      {isSelected && (
+                        <motion.span
+                          layoutId="activeSauce"
+                          className="absolute bottom-0 inset-x-0 h-[2px] bg-[#F58220]"
+                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <div className="flex items-center border-2 border-white bg-[#0a0a0a]">
+                <button
+                  type="button"
+                  aria-label="Decrease quantity"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="grid h-12 w-12 place-items-center hover:bg-white/10 transition-colors text-white active:scale-95"
+                >
+                  <Minus className="h-5 w-5" />
+                </button>
+                <span className="t-display w-12 text-center text-2xl text-white">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  aria-label="Increase quantity"
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="grid h-12 w-12 place-items-center hover:bg-white/10 transition-colors text-white active:scale-95"
+                >
+                  <Plus className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <motion.button 
+                whileTap={{ scale: 0.97 }}
+                onClick={handleAddToCart}
+                disabled={!product.is_available}
+                className={`t-btn flex-1 text-xl transition-all ${
+                  product.is_available
+                    ? added ? "!bg-green-500 !text-black !border-green-500" : ""
+                    : "opacity-50 cursor-not-allowed"
+                }`}
+              >
+                {product.is_available ? (
+                  added ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Check className="h-6 w-6 stroke-[3]" /> {locale === "ar" ? "تمت الإضافة!" : locale === "fr" ? "AJOUTÉ !" : "ADDED!"}
+                    </span>
+                  ) : (
+                    <>{locale === "ar" ? "أضف إلى السلة" : locale === "fr" ? "AJOUTER AU PANIER" : "ADD TO CART"} <span className="t-arrow rtl:-scale-x-100">→</span></>
+                  )
+                ) : (
+                  t.menu.unavailable
+                )}
+              </motion.button>
+            </div>
+
+            <p className="mt-4 t-kicker text-white/30">
+              {locale === "ar" ? "مستوى القرمشة" : locale === "fr" ? "NIVEAU DE CROQUANT" : "CRUNCH LEVEL"} <span className="text-[#F58220]">{"■".repeat(5)}</span>
+              <span>{"■".repeat(0)}</span>
+            </p>
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </section>
+
+      {/* Cross-Sell Section */}
+      <section className="w-full mx-auto px-4 py-16 md:px-8">
+        <h2 className="t-display text-4xl md:text-5xl text-white mb-6">
+          {locale === "ar" ? (<>يتماشى <span className="text-[#F58220]">بقوة</span> مع</>) : locale === "fr" ? (<>IDÉAL <span className="text-[#F58220]">AVEC</span></>) : (<>GOES <span className="text-[#F58220]">HARD</span> WITH</>)}
+        </h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {crossSellProducts.map((p, i) => (
+            <motion.div
+              key={p.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.4 }}
+            >
+              <ProductCard product={p} index={i} />
+            </motion.div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

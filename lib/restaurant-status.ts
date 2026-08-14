@@ -14,8 +14,7 @@ export function isRestaurantOpen(settings: RestaurantSettings): {
     manual_override,
     timezone = "Africa/Algiers",
     forced_closed,
-    custom_message,
-    reopen_at
+    custom_message
   } = settings;
 
   // 1. Check open/closed status

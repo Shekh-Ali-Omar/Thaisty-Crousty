@@ -5,24 +5,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import { ShoppingBag, ArrowRight } from "lucide-react";
 import { useLocale } from "@/components/locale-provider";
 import { useCartStore } from "@/store/cartStore";
-import { formatPrice, cn } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 import {
   getCheckoutSchema,
   type CheckoutFormValues,
 } from "@/lib/validations/order";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { GlassCard } from "@/components/glass/GlassCard";
 import { useHydrated } from "@/lib/hooks";
 import { toast } from "sonner";
 
-type Step = 1 | 2 | 3;
+type Step = 0 | 1 | 2;
 
 export default function CheckoutPage() {
   const { t, locale } = useLocale();
@@ -31,7 +25,8 @@ export default function CheckoutPage() {
   const items = useCartStore((s) => s.items);
   const total = useCartStore((s) => s.totalPrice());
   const clearCart = useCartStore((s) => s.clearCart);
-  const [step, setStep] = useState<Step>(1);
+  
+  const [step, setStep] = useState<Step>(0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,42 +42,49 @@ export default function CheckoutPage() {
     defaultValues: { notes: "" },
   });
 
+  const steps = [
+    `01 — ${t.checkout.stepInfo}`,
+    `02 — ${t.checkout.stepReview}`,
+    `03 — ${t.checkout.stepConfirm}`,
+  ];
+  const deliveryFee = 2.00;
+
   if (!isHydrated) {
     return (
-      <div className="mx-auto max-w-lg flex flex-col gap-6 opacity-0">
-        <h1 className="text-3xl font-bold">{t.checkout.title}</h1>
+      <div className="min-h-screen bg-[#0a0a0a] pt-[68px] flex items-center justify-center">
+         <div className="h-16 w-16 animate-spin rounded-full border-4 border-[#F58220]/20 border-t-[#F58220]" />
       </div>
     );
   }
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-8 py-24 text-center glass-premium rounded-[2.5rem] px-6 max-w-2xl mx-auto">
-        <div className="h-24 w-24 rounded-full bg-white/5 flex items-center justify-center animate-float">
-          <ShoppingBag className="h-10 w-10 text-muted" />
-        </div>
-        <div>
-          <h2 className="text-3xl font-black tracking-tight mb-2">{t.cart.empty}</h2>
-          <p className="text-muted font-medium">{t.cart.emptySubtitle}</p>
-        </div>
-        <Button asChild size="lg" className="h-14 px-10 rounded-2xl bg-primary text-black font-black shadow-[0_8px_30px_rgba(255,140,0,0.3)]">
-          <Link href="/menu">{t.menu.title}</Link>
-        </Button>
+      <div className="min-h-screen bg-[#0a0a0a] pt-[68px]">
+        <section className="mx-auto w-full px-4 py-16 md:px-8 text-center border-2 border-[#1a1a1a] mt-10 bg-[#111]">
+          <h1 className="t-display text-6xl md:text-7xl text-white mb-6 uppercase">
+            {locale === "fr" ? (
+              <>VOTRE <span className="text-[#F58220]">PANIER</span> EST VIDE</>
+            ) : locale === "ar" ? (
+              <><span className="text-[#F58220]">عربة التسوق</span> الخاصة بك فارغة</>
+            ) : (
+              <>YOUR <span className="text-[#F58220]">CART</span> IS EMPTY</>
+            )}
+          </h1>
+          <Link
+            href="/menu"
+            className="t-btn"
+          >
+            {t.common.back_to_menu} <span className="t-arrow rtl:-scale-x-100">→</span>
+          </Link>
+        </section>
       </div>
     );
   }
-
-  const steps = [
-    t.checkout.stepInfo,
-    t.checkout.stepReview,
-    t.checkout.stepConfirm,
-  ];
 
   const onConfirm = async () => {
     setSubmitting(true);
     setError(null);
     try {
-      // Fetch restaurant status
       const statusRes = await fetch("/api/restaurant-status");
       const statusData = await statusRes.json();
 
@@ -112,7 +114,6 @@ export default function CheckoutPage() {
 
       if (result.success) {
         clearCart();
-        // Redirect to success page with order ID
         router.push(`/order-success?id=${result.order.id}`);
       } else {
         setError(result.error || t.common.error);
@@ -126,163 +127,170 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl flex flex-col gap-10">
-      <div className="flex flex-col gap-2 text-center">
-        <h1 className="text-4xl md:text-6xl font-black tracking-tight text-gradient">{t.checkout.title}</h1>
-        <p className="text-muted font-bold tracking-widest uppercase text-xs">{t.checkout.subtitle}</p>
-      </div>
+    <div className="min-h-screen bg-[#0a0a0a] pt-[68px]">
+      <section className="mx-auto w-full px-4 py-10 md:px-8 md:py-16">
+        <h1 className="t-display text-5xl md:text-6xl text-white uppercase">
+          {t.checkout.title}
+        </h1>
 
-      <div className="flex items-center gap-4 px-2">
-        {steps.map((label, i) => {
-          const n = (i + 1) as Step;
-          const isActive = step === n;
-          const isDone = step > n;
-          return (
-            <div key={label} className="flex-1 flex flex-col gap-3">
-              <div
-                className={cn(
-                  "h-1.5 rounded-full transition-all duration-500",
-                  isActive ? "bg-primary shadow-[0_0_15px_rgba(255,140,0,0.6)]" : 
-                  isDone ? "bg-primary/40" : "bg-white/5"
-                )}
-              />
-              <span className={cn(
-                "text-[10px] font-black uppercase tracking-widest text-center transition-colors",
-                isActive ? "text-primary" : "text-muted"
-              )}>
-                {label}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-
-      {step === 1 && (
-        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-          <GlassCard className="p-10 border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
-            <form
-              className="flex flex-col gap-6"
-              onSubmit={handleSubmit(() => setStep(2))}
+        <ol className="mt-6 grid gap-2 sm:grid-cols-3">
+          {steps.map((s, i) => (
+            <li
+              key={s}
+              className={`border-2 px-3 py-2 t-kicker ${
+                i === step
+                  ? "border-[#F58220] bg-[#F58220] text-[#0a0a0a]"
+                  : i < step
+                    ? "border-[#F58220] text-[#F58220]"
+                    : "border-[#1a1a1a] text-white/40"
+              }`}
             >
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-xs font-black uppercase tracking-widest text-muted ms-1">{t.checkout.name}</Label>
-                <Input id="name" {...register("name")} className="h-14 rounded-xl glass border-white/5 focus:border-primary/40 transition-all" />
-                {errors.name && (
-                  <p className="mt-1 text-xs text-red-400 font-bold ms-1">{errors.name.message}</p>
-                )}
+              {s}
+            </li>
+          ))}
+        </ol>
+
+        <div className="t-panel mt-8 p-5 md:p-8">
+          {step === 0 && (
+            <form id="checkout-step-1" className="grid gap-5" onSubmit={handleSubmit(() => setStep(1))}>
+              <div>
+                <label className="t-label" htmlFor="co-name">
+                  {t.checkout.name}
+                </label>
+                <input 
+                  id="co-name" 
+                  {...register("name")}
+                  className="t-field" 
+                  placeholder="Yacine B." 
+                />
+                {errors.name && <p className="mt-2 t-kicker text-[#F58220]">{errors.name.message}</p>}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="text-xs font-black uppercase tracking-widest text-muted ms-1">{t.checkout.phone}</Label>
-                <Input id="phone" type="tel" {...register("phone")} className="h-14 rounded-xl glass border-white/5 focus:border-primary/40 transition-all" />
-                {errors.phone && (
-                  <p className="mt-1 text-xs text-red-400 font-bold ms-1">{errors.phone.message}</p>
-                )}
+              
+              <div>
+                <label className="t-label" htmlFor="co-phone">
+                  {t.checkout.phone}
+                </label>
+                <input 
+                  id="co-phone" 
+                  type="tel"
+                  {...register("phone")}
+                  className="t-field" 
+                  placeholder="0X XX XX XX XX" 
+                />
+                {errors.phone && <p className="mt-2 t-kicker text-[#F58220]">{errors.phone.message}</p>}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="address" className="text-xs font-black uppercase tracking-widest text-muted ms-1">{t.checkout.address}</Label>
-                <Input id="address" {...register("address")} className="h-14 rounded-xl glass border-white/5 focus:border-primary/40 transition-all" />
-                {errors.address && (
-                  <p className="mt-1 text-xs text-red-400 font-bold ms-1">
-                    {errors.address.message}
-                  </p>
-                )}
+
+              <div>
+                <label className="t-label" htmlFor="co-addr">
+                  {t.checkout.address}
+                </label>
+                <input 
+                  id="co-addr" 
+                  {...register("address")}
+                  className="t-field" 
+                  placeholder="Street, building, floor" 
+                />
+                {errors.address && <p className="mt-2 t-kicker text-[#F58220]">{errors.address.message}</p>}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="notes" className="text-xs font-black uppercase tracking-widest text-muted ms-1">{t.checkout.notes}</Label>
-                <Textarea id="notes" {...register("notes")} className="min-h-[100px] rounded-xl glass border-white/5 focus:border-primary/40 transition-all pt-4" />
+
+              <div>
+                <label className="t-label" htmlFor="co-notes">
+                  {t.checkout.notes}
+                </label>
+                <textarea 
+                  id="co-notes" 
+                  rows={3}
+                  {...register("notes")}
+                  className="t-field py-3" 
+                  placeholder="Extra spicy…" 
+                />
               </div>
-              <Button type="submit" size="lg" className="h-16 rounded-2xl bg-primary text-black font-black shadow-[0_8px_30px_rgba(255,140,0,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-all">
-                {t.checkout.review}
-                <ArrowRight className={cn(locale === "ar" ? "mr-2 rotate-180" : "ml-2", "h-5 w-5")} />
-              </Button>
             </form>
-          </GlassCard>
-        </motion.div>
-      )}
+          )}
 
-      {step === 2 && (
-        <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-8">
-          <GlassCard className="p-8 border-primary/10">
-            <h3 className="text-xs font-black uppercase tracking-widest text-muted mb-4">{t.checkout.deliveryInfo}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <p className="text-xs text-muted uppercase font-bold tracking-widest mb-1">{t.checkout.customer}</p>
-                <p className="font-black text-lg">{getValues("name")}</p>
-                <p className="text-muted font-medium">{getValues("phone")}</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted uppercase font-bold tracking-widest mb-1">{t.checkout.address}</p>
-                <p className="font-bold">{getValues("address")}</p>
-              </div>
-            </div>
-          </GlassCard>
-
-          <GlassCard className="p-8">
-            <h3 className="text-xs font-black uppercase tracking-widest text-muted mb-6">{t.checkout.orderDetails}</h3>
-            <ul className="space-y-4 mb-8">
-              {items.map((i) => (
-                <li key={i.productId} className="flex justify-between items-center">
-                  <div className="flex flex-col">
-                    <span className="font-bold">{i.name}</span>
-                    <span className="text-xs text-muted font-bold">{t.checkout.qty}: {i.quantity}</span>
-                  </div>
-                  <span className="font-black tracking-tight">{formatPrice(i.price * i.quantity)}</span>
+          {step === 1 && (
+            <div>
+              <h2 className="t-display text-3xl text-white uppercase">{t.checkout.orderDetails}</h2>
+              <ul className="mt-5 divide-y-2 divide-white/10">
+                {items.map((i) => (
+                  <li key={i.productId} className="flex items-center justify-between gap-4 py-3">
+                    <span className="font-condensed text-lg font-bold uppercase text-white/90">{i.quantity} × {i.name}</span>
+                    <span className="t-display text-2xl text-white">{formatPrice(i.price * i.quantity)}</span>
+                  </li>
+                ))}
+                <li className="flex items-center justify-between gap-4 py-3">
+                  <span className="font-condensed text-lg font-bold uppercase text-white/50">{locale === "fr" ? "Livraison" : locale === "ar" ? "التوصيل" : "Delivery"}</span>
+                  <span className="t-display text-2xl text-white/50">{formatPrice(deliveryFee)}</span>
                 </li>
-              ))}
-            </ul>
-            <div className="h-px bg-white/5 my-4" />
-            <div className="flex justify-between items-center">
-              <span className="text-xl font-black">{t.cart.total}</span>
-              <span className="text-3xl font-black text-primary glow-primary tracking-tighter">
-                {formatPrice(total)}
-              </span>
-            </div>
-          </GlassCard>
-
-          <div className="flex gap-4">
-            <Button variant="glass" className="h-16 flex-1 rounded-2xl font-bold" onClick={() => setStep(1)}>
-              {t.checkout.back}
-            </Button>
-            <Button className="h-16 flex-[2] rounded-2xl bg-primary text-black font-black shadow-[0_8px_30px_rgba(255,140,0,0.35)]" onClick={() => setStep(3)}>
-              {t.checkout.stepConfirm}
-              <ArrowRight className={cn(locale === "ar" ? "mr-2 rotate-180" : "ml-2", "h-5 w-5")} />
-            </Button>
-          </div>
-        </motion.div>
-      )}
-
-      {step === 3 && (
-        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col gap-8 text-center py-10">
-          <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-            <ShoppingBag className="h-12 w-12 text-primary glow-primary" />
-          </div>
-          <div>
-            <h2 className="text-3xl font-black tracking-tight mb-4">{t.checkout.finalConfirm}</h2>
-            <p className="text-muted max-w-sm mx-auto font-medium leading-relaxed">
-              {t.checkout.finalDesc}
-            </p>
-          </div>
-          
-          {error && (
-            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 font-bold text-sm">
-              {error}
+              </ul>
+              <div className="mt-4 flex items-baseline justify-between border-t-2 border-white/10 pt-4">
+                <span className="t-display text-2xl text-white">{t.cart.total}</span>
+                <span className="t-display text-3xl text-[#F58220]">{formatPrice(total + deliveryFee)}</span>
+              </div>
             </div>
           )}
 
-          <div className="flex flex-col gap-4 max-w-sm mx-auto w-full">
-            <Button
-              className="h-16 w-full rounded-2xl bg-primary text-black font-black shadow-[0_8px_40px_rgba(255,140,0,0.4)] text-lg"
-              disabled={submitting}
-              onClick={onConfirm}
-            >
-              {submitting ? t.checkout.placing : t.checkout.submit}
-            </Button>
-            <Button variant="glass" className="h-14 w-full rounded-2xl font-bold" onClick={() => setStep(2)} disabled={submitting}>
-              {t.checkout.back}
-            </Button>
+          {step === 2 && (
+            <div>
+              <h2 className="t-display text-3xl text-white uppercase">{t.checkout.finalConfirm}</h2>
+              <p className="mt-3 opacity-80 text-white font-condensed uppercase tracking-wide">
+                {t.checkout.finalDesc}
+              </p>
+              <p className="mt-6 t-display text-4xl text-[#F58220]">{formatPrice(total + deliveryFee)}</p>
+              
+              {error && (
+                <div className="mt-6 p-4 border border-[#F58220] bg-[#F58220]/10 text-[#F58220] t-kicker">
+                  {error}
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            {step > 0 && (
+              <button 
+                type="button" 
+                onClick={() => setStep((step - 1) as Step)} 
+                className="t-btn-quiet"
+                disabled={submitting}
+              >
+                {t.checkout.back}
+              </button>
+            )}
+            
+            {step === 0 && (
+              <button 
+                form="checkout-step-1"
+                type="submit" 
+                className="t-btn flex-1"
+              >
+                {locale === "fr" ? "CONTINUER" : locale === "ar" ? "استمر" : "CONTINUE"} <span className="t-arrow rtl:-scale-x-100">→</span>
+              </button>
+            )}
+
+            {step === 1 && (
+              <button 
+                type="button" 
+                onClick={() => setStep(2)} 
+                className="t-btn flex-1"
+              >
+                {t.checkout.stepConfirm} <span className="t-arrow rtl:-scale-x-100">→</span>
+              </button>
+            )}
+
+            {step === 2 && (
+              <button 
+                type="button"
+                onClick={onConfirm}
+                disabled={submitting}
+                className="t-btn flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {submitting ? t.checkout.placing : (locale === "fr" ? "PASSER LA COMMANDE" : locale === "ar" ? "تأكيد الطلب" : "PLACE ORDER")} <span className="t-arrow rtl:-scale-x-100">→</span>
+              </button>
+            )}
           </div>
-        </motion.div>
-      )}
+        </div>
+      </section>
     </div>
   );
 }

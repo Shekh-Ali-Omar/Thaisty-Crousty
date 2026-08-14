@@ -33,28 +33,28 @@ export function StickyCartButton() {
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: "spring", damping: 25, stiffness: 350 }}
           onClick={openCart}
-          className="fixed bottom-24 left-4 right-4 z-40 flex h-16 items-center justify-between gap-4 rounded-2xl glass-premium px-6 font-bold shadow-[0_12px_40px_rgba(0,0,0,0.8)] md:bottom-8 md:left-auto md:right-8 md:w-[400px]"
+          className="fixed bottom-24 left-4 right-4 z-40 flex h-16 items-center justify-between gap-4 bg-[#111] border-2 border-[#1a1a1a] hover:border-[#F58220] transition-colors t-grain px-6 shadow-[0_12px_40px_rgba(0,0,0,0.8)] md:bottom-8 md:left-auto md:right-8 md:w-[400px]"
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="relative">
-              <ShoppingBag className="h-6 w-6 text-primary glow-primary" />
+              <ShoppingBag className="h-6 w-6 text-white" />
               <motion.span
                 key={itemCount}
                 initial={{ scale: 1.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="absolute -right-2 -top-2 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-white px-1 text-[10px] font-black text-black shadow-[0_0_15px_rgba(255,255,255,0.4)]"
+                className="absolute -right-2.5 rtl:-left-2.5 rtl:right-auto -top-2 flex h-5 min-w-[20px] items-center justify-center bg-[#F58220] px-1 text-[12px] font-barlow-condensed font-black text-black border border-black"
               >
                 {itemCount}
               </motion.span>
             </div>
-            <span className="text-base text-foreground tracking-tight">
+            <span className="font-barlow-condensed text-xl font-bold uppercase text-white tracking-wider mt-1">
               {t.cart.viewCart}
             </span>
           </div>
           
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-px bg-white/10 mx-2" />
-            <span className="text-lg font-black text-primary glow-primary tracking-tighter">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-[2px] bg-[#1a1a1a]" />
+            <span className="t-price text-2xl text-[#F58220]">
               {formatPrice(total)}
             </span>
           </div>

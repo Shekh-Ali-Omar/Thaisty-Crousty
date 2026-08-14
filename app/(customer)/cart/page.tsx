@@ -2,13 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import { useLocale } from "@/components/locale-provider";
 import { useCartStore } from "@/store/cartStore";
-import { formatPrice, cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { GlassCard } from "@/components/glass/GlassCard";
+import { formatPrice } from "@/lib/utils";
 import { useHydrated } from "@/lib/hooks";
 
 export default function CartPage() {
@@ -18,146 +15,149 @@ export default function CartPage() {
   const updateQuantity = useCartStore((s) => s.updateQuantity);
   const removeItem = useCartStore((s) => s.removeItem);
   const total = useCartStore((s) => s.totalPrice());
+  const delivery = 2.00; // Mock delivery fee for layout matching
 
   if (!isHydrated) {
     return (
-      <div className="flex flex-col gap-6 opacity-0">
-        <h1 className="text-3xl font-bold">{t.cart.title}</h1>
+      <div className="min-h-screen bg-[#0a0a0a] pt-[68px] flex items-center justify-center">
+         <div className="h-16 w-16 animate-spin rounded-full border-4 border-[#F58220]/20 border-t-[#F58220]" />
       </div>
     );
   }
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-8 py-24 text-center glass-premium rounded-[2.5rem] px-6 max-w-2xl mx-auto">
-        <div className="h-24 w-24 rounded-full bg-white/5 flex items-center justify-center animate-float">
-          <ShoppingBag className="h-10 w-10 text-muted" />
-        </div>
-        <div>
-          <h2 className="text-3xl font-black tracking-tight mb-2">{t.cart.empty}</h2>
-          <p className="text-muted font-medium">{t.cart.emptySubtitle}</p>
-        </div>
-        <Button asChild size="lg" className="h-14 px-10 rounded-2xl bg-primary text-black font-black shadow-[0_8px_30px_rgba(255,140,0,0.3)]">
-          <Link href="/menu">{t.menu.title}</Link>
-        </Button>
+      <div className="min-h-screen bg-[#0a0a0a] pt-[68px]">
+        <section className="mx-auto w-full px-4 py-16 md:px-8 text-center border-2 border-dashed border-[#1a1a1a] mt-10">
+          <h1 className="t-display text-6xl md:text-7xl text-white mb-6 uppercase">
+            {locale === "fr" ? (
+              <>VOTRE <span className="text-[#F58220]">PANIER</span> EST VIDE</>
+            ) : locale === "ar" ? (
+              <><span className="text-[#F58220]">عربة التسوق</span> الخاصة بك فارغة</>
+            ) : (
+              <>YOUR <span className="text-[#F58220]">CART</span> IS EMPTY</>
+            )}
+          </h1>
+          <p className="t-kicker text-white/50 mb-10">
+            {t.cart.empty}
+          </p>
+          <Link
+            href="/menu"
+            className="t-btn"
+          >
+            {t.common.back_to_menu} <span className="t-arrow rtl:-scale-x-100">→</span>
+          </Link>
+        </section>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-10 max-w-4xl mx-auto">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-4xl md:text-6xl font-black tracking-tight text-gradient">{t.cart.title}</h1>
-        <p className="text-muted font-bold tracking-widest uppercase text-xs">{t.cart.review}</p>
-      </div>
+    <div className="min-h-screen bg-[#0a0a0a] pt-[68px]">
+      <section className="mx-auto w-full px-4 py-10 md:px-8 md:py-16">
+        <h1 className="t-display text-6xl md:text-7xl text-white uppercase mb-8">
+          {locale === "fr" ? (
+            <>VOTRE <span className="text-[#F58220]">{t.cart.title}</span></>
+          ) : locale === "ar" ? (
+            <><span className="text-[#F58220]">{t.cart.title}</span> الخاصة بك</>
+          ) : (
+            <>YOUR <span className="text-[#F58220]">{t.cart.title}</span></>
+          )}
+        </h1>
 
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
-        <ul className="flex flex-col gap-4 lg:col-span-2">
-          {items.map((item, i) => (
-            <motion.li
-              key={item.productId}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.05 }}
-            >
-              <GlassCard className="flex gap-5 p-5 border-white/5 hover:border-primary/20 transition-all group">
-                <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl">
+        <div className="mt-8 grid gap-8 lg:grid-cols-[1.4fr_1fr] items-start">
+          {/* ITEMS LIST */}
+          <div className="t-panel">
+            {items.map((item) => (
+              <div
+                key={item.productId}
+                className="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-4 border-b-2 border-white/10 p-4 last:border-b-0 sm:grid-cols-[96px_minmax(0,1fr)_auto]"
+              >
+                <div className="h-20 w-20 border-2 border-[#1a1a1a] bg-[#0a0a0a] sm:h-24 sm:w-24 relative overflow-hidden flex items-center justify-center">
                   {item.image ? (
                     <Image
                       src={item.image}
                       alt={item.name}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      sizes="96px"
+                      className="object-cover object-[50%_78%]"
                     />
                   ) : (
-                    <span className="flex h-full items-center justify-center text-4xl bg-white/5">
-                      🍗
-                    </span>
+                    <span className="text-2xl">🍗</span>
                   )}
                 </div>
-                <div className="min-w-0 flex-1 flex flex-col justify-between">
-                  <div className="flex justify-between gap-2">
-                    <div>
-                      <p className="font-black text-lg tracking-tight group-hover:text-primary transition-colors">{item.name}</p>
-                      <p className="text-primary font-black text-sm glow-primary">
-                        {formatPrice(item.price)}
-                      </p>
-                    </div>
+                <div className="min-w-0">
+                  <p className="t-kicker text-[#F58220] opacity-80">
+                    CROUSTY
+                  </p>
+                  <h2 className="truncate t-display text-2xl text-white uppercase mt-1">{item.name}</h2>
+                  <p className="mt-1 t-price text-xl text-white">{formatPrice(item.price)}</p>
+                </div>
+                <div className="col-span-2 flex items-center justify-between gap-3 sm:col-span-1 mt-2 sm:mt-0">
+                  <div className="flex items-center border-2 border-[#1a1a1a] bg-[#0a0a0a]">
                     <button
                       type="button"
-                      onClick={() => removeItem(item.productId)}
-                      className="text-muted hover:text-red-400 p-2 hover:bg-red-400/10 rounded-xl transition-all h-fit"
+                      onClick={() => updateQuantity(item.productId, Math.max(1, item.quantity - 1))}
+                      className="grid h-11 w-11 place-items-center hover:bg-white/5 transition-colors text-white"
                     >
-                      <Trash2 className="h-5 w-5" />
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <span className="w-10 text-center t-display text-xl text-white pt-1">{item.quantity}</span>
+                    <button
+                      type="button"
+                      onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                      className="grid h-11 w-11 place-items-center hover:bg-white/5 transition-colors text-white"
+                    >
+                      <Plus className="h-4 w-4" />
                     </button>
                   </div>
-                  
-                  <div className="mt-4 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-1 rounded-2xl glass p-1 border-white/10">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-10 w-10 rounded-xl hover:bg-white/5"
-                        onClick={() =>
-                          updateQuantity(item.productId, item.quantity - 1)
-                        }
-                      >
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <span className="min-w-8 text-center font-black">{item.quantity}</span>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-10 w-10 rounded-xl hover:bg-white/5"
-                        onClick={() =>
-                          updateQuantity(item.productId, item.quantity + 1)
-                        }
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <span className="font-black text-lg tracking-tighter">
-                      {formatPrice(item.price * item.quantity)}
-                    </span>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeItem(item.productId)}
+                    className="grid h-11 w-11 place-items-center border-2 border-white/10 bg-[#0a0a0a] hover:border-red-500 hover:text-red-500 transition-colors text-white/50"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </div>
-              </GlassCard>
-            </motion.li>
-          ))}
-        </ul>
+              </div>
+            ))}
+          </div>
 
-        <div className="flex flex-col gap-6 lg:sticky lg:top-32">
-          <GlassCard className="p-8 glass-strong border-primary/10 shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted mb-6">{t.cart.summary}</h3>
-            <div className="flex flex-col gap-4 mb-8">
-              <div className="flex justify-between text-muted font-medium">
-                <span>{t.cart.subtotal}</span>
-                <span>{formatPrice(total)}</span>
+          {/* SUMMARY ASIDE */}
+          <aside className="t-panel p-6 md:p-8 sticky top-[100px]">
+            <h2 className="t-display text-3xl text-white uppercase">{t.cart.summary}</h2>
+            
+            <dl className="mt-6 space-y-4 t-kicker text-white/70">
+              <div className="flex justify-between items-center">
+                <dt>{t.cart.subtotal}</dt>
+                <dd className="t-price text-xl text-white">{formatPrice(total)}</dd>
               </div>
-              <div className="flex justify-between text-muted font-medium">
-                <span>{t.cart.delivery}</span>
-                <span className="text-green-400">{t.cart.deliveryFree}</span>
+              <div className="flex justify-between items-center">
+                <dt>{locale === "fr" ? "Livraison" : locale === "ar" ? "التوصيل" : "Delivery"}</dt>
+                <dd className="t-price text-xl text-white">{formatPrice(delivery)}</dd>
               </div>
-              <div className="h-px bg-white/5 my-2" />
-              <div className="flex justify-between text-2xl font-black tracking-tighter">
-                <span>{t.cart.total}</span>
-                <span className="text-gradient">{formatPrice(total)}</span>
+              
+              <div className="flex items-baseline justify-between border-t-2 border-white/10 pt-4 mt-6">
+                <dt className="t-display text-2xl text-white">{t.cart.total}</dt>
+                <dd className="t-price text-4xl text-[#F58220]">{formatPrice(total + delivery)}</dd>
               </div>
-            </div>
-            <Button asChild size="lg" className="w-full h-14 rounded-2xl bg-primary text-black font-black shadow-[0_8px_30px_rgba(255,140,0,0.35)] hover:scale-[1.02] active:scale-[0.98] transition-all">
-              <Link href="/checkout">
-                {t.cart.checkout}
-                <ArrowRight className={cn(locale === "ar" ? "mr-2 rotate-180" : "ml-2", "h-5 w-5")} />
-              </Link>
-            </Button>
-          </GlassCard>
-          
-          <p className="text-[10px] text-muted text-center font-bold uppercase tracking-widest">
-            {t.cart.secure}
-          </p>
+            </dl>
+            
+            <Link
+              href="/checkout"
+              className="t-btn w-full mt-8"
+            >
+              {t.cart.checkout} <span className="t-arrow rtl:-scale-x-100">→</span>
+            </Link>
+            
+            <Link
+              href="/menu"
+              className="mt-4 block text-center t-kicker text-white/50 hover:text-white transition-colors underline underline-offset-4"
+            >
+              {locale === "fr" ? "Continuer vos achats" : locale === "ar" ? "مواصلة التسوق" : "Continue shopping"}
+            </Link>
+          </aside>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

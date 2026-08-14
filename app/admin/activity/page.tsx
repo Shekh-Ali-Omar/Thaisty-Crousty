@@ -3,8 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { createClient } from "@/lib/supabase/client";
-import { History, User, Tag, Clock, Database, RefreshCw } from "lucide-react";
-import { GlassCard } from "@/components/glass/GlassCard";
+import { User, Clock, RefreshCw } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,6 +41,7 @@ export default function ActivityPage() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
   }, [load]);
 

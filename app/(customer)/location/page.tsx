@@ -1,116 +1,69 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { 
-  MapPin, 
-  Car, 
-  Navigation, 
-  Bike, 
-  Clock,
-  Camera,
-  Phone
-} from "lucide-react";
+import { MapPin, Clock, Navigation } from "lucide-react";
 import { useLocale } from "@/components/locale-provider";
-import { GlassCard } from "@/components/glass/GlassCard";
-import { Button } from "@/components/ui/button";
 
 export default function LocationPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
   return (
-    <div className="flex flex-col gap-16 pb-20">
-      <section className="text-center max-w-3xl mx-auto pt-10">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="inline-flex items-center gap-2 rounded-full glass px-4 py-1.5 text-primary mb-6"
-        >
-          <MapPin className="h-4 w-4" />
-          <span className="text-xs font-black uppercase tracking-widest">{t.nav.location}</span>
-        </motion.div>
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-5xl md:text-7xl font-black tracking-tight text-gradient mb-8"
-        >
-          {t.location.title}
-        </motion.h1>
-      </section>
-
-      {/* Hero Map Section */}
-      <section className="h-[500px] w-full rounded-[3rem] overflow-hidden glass-premium relative">
-        <div className="absolute inset-0 bg-white/5 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4 text-muted">
-            <Navigation className="h-16 w-16 animate-pulse" />
-            <p className="font-bold tracking-[0.3em] uppercase text-xs">{t.contact.mapLoading}</p>
-          </div>
+    <div className="min-h-screen bg-[#0a0a0a] pt-[68px]">
+      <section className="t-grain border-b-2 border-[#F58220] bg-[#0a0a0a] px-4 py-14 md:px-8 md:py-20">
+        <div className="mx-auto w-full">
+          <p className="t-kicker text-[#F58220]">
+            {locale === "ar" ? "تفضل بزيارتنا" : locale === "fr" ? "VENEZ NOUS VOIR" : "COME THROUGH"}
+          </p>
+          <h1 className="t-display mt-3 text-[15vw] leading-[0.78] md:text-[9vw] text-white">
+            {locale === "ar" ? (<>أين <span className="text-[#F58220]">نحن.</span></>) : locale === "fr" ? (<>TROUVEZ- <span className="text-[#F58220]">NOUS.</span></>) : (<>FIND <span className="text-[#F58220]">US.</span></>)}
+          </h1>
         </div>
-        <div className="absolute top-8 left-8 z-10">
-          <GlassCard className="p-6 backdrop-blur-3xl border-white/10 shadow-2xl max-w-xs">
-            <p className="text-lg font-black tracking-tight mb-2">Thaisty Crousty</p>
-            <p className="text-sm text-muted leading-relaxed mb-4">
-              {t.contact.locationVal}
+      </section>
+
+      <section className="mx-auto grid w-full gap-8 px-4 py-12 md:grid-cols-[1fr_1.2fr] md:px-8">
+        <div className="space-y-6">
+          <div className="t-panel p-5">
+            <span className="t-kicker text-white/50">
+              {locale === "ar" ? "العنوان" : locale === "fr" ? "ADRESSE" : "ADDRESS"}
+            </span>
+            <p className="mt-2 flex items-start gap-3 font-barlow-condensed font-bold text-2xl uppercase text-white leading-tight">
+              <MapPin className="mt-1 h-6 w-6 shrink-0 text-[#F58220]" />
+              {t.contact?.locationVal || "12 Rue du Crunch, Centre Ville"}
             </p>
-            <Button className="w-full h-12 rounded-xl bg-primary text-black font-black">
-              {t.location.directions}
-            </Button>
-          </GlassCard>
+          </div>
+
+          <div className="t-panel p-5">
+            <span className="t-kicker text-white/50">
+              {locale === "ar" ? "ساعات العمل" : locale === "fr" ? "HORAIRES" : "HOURS"}
+            </span>
+            <p className="mt-2 flex items-center gap-3 font-barlow-condensed font-bold text-2xl uppercase text-white leading-tight">
+              <Clock className="h-6 w-6 shrink-0 text-[#F58220]" />
+              {locale === "ar" ? "11:00 — 23:30 · كل يوم" : locale === "fr" ? "11:00 — 23:30 · TOUS LES JOURS" : "11:00 — 23:30 · EVERY DAY"}
+            </p>
+            <div className="mt-4">
+              <span className="t-sticker-acid">{locale === "ar" ? "مفتوح الآن" : locale === "fr" ? "OUVERT" : "OPEN NOW"}</span>
+            </div>
+          </div>
+
+          <a
+            href="https://maps.google.com"
+            className="t-btn w-full text-xl"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Navigation className="h-5 w-5" /> {locale === "ar" ? "احصل على الاتجاهات" : locale === "fr" ? "ITINÉRAIRE" : "GET DIRECTIONS"}
+          </a>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent pointer-events-none" />
-      </section>
 
-      {/* Details Grid */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <GlassCard className="p-8 flex flex-col gap-6">
-          <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Car className="h-7 w-7 text-primary" />
+        <div className="min-h-[400px] border-2 border-[#1a1a1a] bg-[#111] relative">
+          <div className="absolute inset-0 bg-[#0a0a0a]/50 flex items-center justify-center z-0 pointer-events-none">
+             <span className="t-kicker text-white/20">{locale === "ar" ? "جاري تحميل الخريطة..." : locale === "fr" ? "CHARGEMENT..." : "LOADING MAP..."}</span>
           </div>
-          <div>
-            <h3 className="text-xl font-black tracking-tight mb-2">{t.location.parking.title}</h3>
-            <p className="text-muted leading-relaxed">
-              {t.location.parking.desc}
-            </p>
-          </div>
-        </GlassCard>
-
-        <GlassCard className="p-8 flex flex-col gap-6">
-          <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Bike className="h-7 w-7 text-primary" />
-          </div>
-          <div>
-            <h3 className="text-xl font-black tracking-tight mb-2">{t.location.delivery.title}</h3>
-            <p className="text-muted leading-relaxed">
-              {t.location.delivery.desc}
-            </p>
-          </div>
-        </GlassCard>
-
-        <GlassCard className="p-8 flex flex-col gap-6">
-          <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Clock className="h-7 w-7 text-primary" />
-          </div>
-          <div>
-            <h3 className="text-xl font-black tracking-tight mb-2">{t.location.hours.title}</h3>
-            <p className="text-muted leading-relaxed">
-              {t.location.hours.desc}
-            </p>
-          </div>
-        </GlassCard>
-      </section>
-
-      {/* Social CTA */}
-      <section className="text-center py-12">
-        <p className="text-muted font-bold tracking-widest uppercase text-xs mb-8">{t.location.follow}</p>
-        <div className="flex flex-wrap justify-center gap-6">
-          <Button variant="glass" className="h-16 px-10 rounded-2xl gap-3 text-lg font-bold">
-            <Camera className="h-6 w-6" />
-            @thaistycrousty
-          </Button>
-          <Button variant="glass" className="h-16 px-10 rounded-2xl gap-3 text-lg font-bold">
-            <Phone className="h-6 w-6" />
-            +213 555 123 456
-          </Button>
+          <iframe
+            title="Thaisty Crousty location map"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=3.03%2C36.74%2C3.10%2C36.78&layer=mapnik"
+            className="h-full min-h-[400px] w-full grayscale relative z-10 mix-blend-luminosity opacity-80"
+            loading="lazy"
+          />
         </div>
       </section>
     </div>

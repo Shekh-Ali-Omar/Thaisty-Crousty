@@ -63,6 +63,7 @@ export async function getProductById(id: string, locale?: string): Promise<Produ
 /** 
  * Helper to ensure consistent types and localized content across Web & Electron.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mapDbToProduct(row: any, locale?: string): Product {
   // Locale-based field selection with fallbacks
   // Order: current locale -> English -> fallback base field

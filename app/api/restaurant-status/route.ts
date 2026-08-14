@@ -21,7 +21,7 @@ export async function GET() {
         .single();
       settings = data;
       fetchErr = error;
-    } catch (adminErr) {
+    } catch {
       console.warn("[API_STATUS_WARN]: Admin client failed, attempting fallback to public client.");
       const clientSupabase = createClient();
       const { data, error } = await clientSupabase

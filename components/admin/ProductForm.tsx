@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Image from "next/image";
-import { Upload, X, Loader2, ImageIcon, Trash2, CheckCircle2, Languages, DollarSign, Megaphone } from "lucide-react";
+import { Upload, Loader2, ImageIcon, Trash2, CheckCircle2, Languages, DollarSign, Megaphone } from "lucide-react";
 import type { Product } from "@/lib/types";
 import { RESTAURANT_ID, STORAGE_BUCKET } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/client";
@@ -52,12 +52,12 @@ export function ProductForm({ product, onSuccess, onCancel }: Props) {
   const [images, setImages] = useState<string[]>(product?.images || (product?.image ? [product.image] : []));
   const [mainImage, setMainImage] = useState<string | null>(product?.image || null);
   const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+
 
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -157,8 +157,8 @@ export function ProductForm({ product, onSuccess, onCancel }: Props) {
         await logAction('create', 'product', data.id, `Created new product: ${values.name_en}`);
       }
       onSuccess();
-    } catch (err: any) {
-      setError(err.message || "Failed to save product.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to save product.");
     }
   };
 

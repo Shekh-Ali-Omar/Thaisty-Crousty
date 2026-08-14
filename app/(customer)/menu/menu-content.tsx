@@ -2,24 +2,18 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, ShoppingBag } from "lucide-react";
+import { Search } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { useLocale } from "@/components/locale-provider";
 import { Input } from "@/components/ui/input";
 import type { Product } from "@/lib/types";
 import { fetchProducts } from "@/lib/products/fetch";
-import { useCartStore } from "@/store/cartStore";
-import { useHydrated } from "@/lib/hooks";
 
 export function MenuContent() {
   const { t, locale } = useLocale();
   const searchParams = useSearchParams();
-  const isHydrated = useHydrated();
-  const openCart = useCartStore((s) => s.openCart);
-  const itemCount = useCartStore((s) => s.totalItems());
-  
+
   const [products, setProducts] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState(
@@ -52,92 +46,90 @@ export function MenuContent() {
   }, [products, category, searchQuery]);
 
   return (
-    <div className="flex flex-col gap-6 md:gap-10">
-      {/* Mobile Top Header */}
-      <div className="flex md:hidden items-center justify-between mb-2">
-        <h1 className="text-3xl font-black tracking-tight text-gradient">
-          {t.menu.title}
-        </h1>
-        <button 
-          onClick={openCart}
-          className="relative h-12 w-12 rounded-2xl glass flex items-center justify-center border-white/10 active:scale-90 transition-transform"
-        >
-          <ShoppingBag className="h-6 w-6 text-primary" />
-          {isHydrated && itemCount > 0 && (
-            <span className="absolute -top-1 -right-1 h-5 min-w-[20px] rounded-full bg-primary text-[10px] font-black text-black flex items-center justify-center px-1 shadow-[0_0_15px_rgba(255,140,0,0.6)]">
-              {itemCount}
-            </span>
-          )}
-        </button>
-      </div>
-
-      {/* Desktop Header & Search */}
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="hidden md:block">
-            <h1 className="text-6xl font-black tracking-tight text-gradient">
-              {t.menu.title}
-            </h1>
-            <p className="mt-2 text-muted font-medium text-lg">
-              {filtered.length} {t.menu.itemsCount}
-            </p>
-          </div>
-
-          <div className="relative w-full md:w-96 group">
-            <Search className="absolute start-5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted group-focus-within:text-primary transition-colors" />
-            <Input 
-              placeholder={t.menu.search} 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-14 md:h-16 ps-14 rounded-[1.5rem] md:rounded-3xl glass border-white/5 focus:border-primary/30 focus:ring-primary/20 transition-all text-base md:text-lg shadow-2xl"
-            />
-          </div>
+    <div className="min-h-screen bg-[#0a0a0a] pb-40">
+      {/* Page Head */}
+      <section className="t-grain relative overflow-hidden border-b-2 border-[#F58220] bg-[#0a0a0a] px-4 pt-32 pb-14 md:px-8 md:pt-40 md:pb-20">
+        <div className="mx-auto w-full">
+          <p className="t-kicker text-[#F58220]">{locale === "ar" ? "ابحث عن طبقك" : locale === "fr" ? "TROUVE TON BOL" : "FIND YOUR BOWL"}</p>
+          <h1 className="t-display mt-3 text-[16vw] leading-[0.8] text-white md:text-[9vw]">
+            {locale === "ar" ? (<>قائمة <span className="text-[#F58220]">الطعام</span></>) : locale === "fr" ? (<>LE <span className="text-[#F58220]">MENU</span></>) : (<>THE <span className="text-[#F58220]">MENU</span></>)}
+          </h1>
         </div>
+      </section>
 
-        {/* Filters */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <SlidersHorizontal className="h-4 w-4 text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-muted">{t.menu.filter}</span>
-          </div>
+      {/* Sticky Categories Bar */}
+      <div className="sticky top-[68px] z-30 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-[#1a1a1a]">
+        <div className="px-4 py-3 md:px-8 w-full mx-auto flex items-center justify-between gap-4">
           <CategoryFilter active={category} onChange={setCategory} />
+          
+          <div className="relative hidden md:block w-72 shrink-0">
+             <Search className="absolute start-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white rtl:-scale-x-100" />
+             <Input 
+                placeholder={t.menu.search}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="t-field !ps-12 text-white rounded-none"
+             />
+          </div>
         </div>
       </div>
 
-      {/* Grid Section */}
-      {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-10">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="aspect-square animate-pulse rounded-[2.5rem] glass-strong" />
-          ))}
+      {/* Main Content */}
+      <section className="w-full mx-auto px-4 md:px-8 pt-10">
+        {/* Mobile Search */}
+        <div className="md:hidden relative mb-8">
+             <Search className="absolute start-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white rtl:-scale-x-100" />
+             <Input 
+                placeholder={t.menu.search}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="t-field !ps-12 text-white rounded-none"
+             />
         </div>
-      ) : filtered.length === 0 ? (
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="py-24 text-center glass-strong rounded-[3rem] flex flex-col items-center gap-6"
-        >
-          <div className="h-24 w-24 rounded-full bg-white/5 flex items-center justify-center">
-            <Search className="h-10 w-10 text-muted" />
-          </div>
-          <div>
-            <p className="text-2xl font-black mb-2">{t.menu.empty}</p>
-            <p className="text-muted font-medium">Try searching for something else or clearing filters.</p>
-          </div>
-          <button 
-            onClick={() => {setCategory("all"); setSearchQuery("");}}
-            className="h-12 px-8 rounded-2xl bg-primary/10 text-primary font-bold border border-primary/20 hover:bg-primary/20 transition-colors"
-          >
-            {t.menu.clearFilters}
-          </button>
-        </motion.div>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-10">
-          {filtered.map((product, index) => (
-            <ProductCard key={product.id} product={product} index={index} />
-          ))}
+
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+          <h2 className="t-display text-4xl md:text-5xl text-white">
+            {category === "all" ? (
+              locale === "ar" ? (<>الأكثر <span className="text-[#F58220]">مبيعاً</span></>) : locale === "fr" ? (<>MEILLEURES <span className="text-[#F58220]">VENTES</span></>) : (<>BEST <span className="text-[#F58220]">SELLERS</span></>)
+            ) : (
+              (t.menu.categories as any)[category] || category
+            )}
+          </h2>
+          <span className="t-kicker text-[#F58220] px-4 py-2 border border-[#1a1a1a] self-start md:self-auto">
+             {filtered.length} {t.menu.itemsCount}
+          </span>
         </div>
-      )}
+
+        {/* Grid Section */}
+        {loading ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="aspect-square animate-pulse bg-[#111] border border-[#1a1a1a]" />
+            ))}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="mt-10 border border-dashed border-[#1a1a1a] p-12 text-center bg-[#111]">
+            <p className="t-display text-4xl text-[#F58220] mb-2">{t.menu.empty}</p>
+            <p className="mb-6 text-white/50 font-barlow-condensed tracking-wide">
+              {locale === "ar" ? "حاول البحث عن شيء آخر أو مسح الفلاتر." : locale === "fr" ? "Essayez de chercher autre chose ou d'effacer les filtres." : "Try searching for something else or clearing filters."}
+            </p>
+            <button
+              onClick={() => { setCategory("all"); setSearchQuery(""); }}
+              className="t-btn"
+            >
+              {t.menu.clearFilters}
+            </button>
+          </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((product, i) => (
+              <div key={product.id} className={i % 5 === 0 ? "sm:col-span-2 lg:col-span-1" : ""}>
+                 <ProductCard product={product} index={i} tall={i % 5 === 0} />
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

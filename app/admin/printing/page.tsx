@@ -10,7 +10,6 @@ import { Printer, Clock, CheckCircle2, XCircle, RefreshCw, Hash, User, MapPin } 
 import { Button } from "@/components/ui/button";
 import { GlassCard } from "@/components/glass/GlassCard";
 import { OrderDetailsModal } from "@/components/admin/OrderDetailsModal";
-import { useLocale } from "@/components/locale-provider";
 import { logAction } from "@/lib/admin/activity";
 import { toast } from "sonner";
 import useSound from "use-sound";
@@ -23,7 +22,6 @@ type OrderWithItems = Order & { order_items: OrderItem[] };
  * Features ultra-responsive realtime updates with sound and visual alerts.
  */
 export default function PrintingStatusPage() {
-  const { t } = useLocale();
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<OrderWithItems | null>(null);
@@ -49,6 +47,7 @@ export default function PrintingStatusPage() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
     
     const supabase = createClient();
@@ -73,12 +72,12 @@ export default function PrintingStatusPage() {
             // 2. Interactive Alert
             try {
                 playAlert();
-            } catch (e) {
-                console.warn("Sound playback blocked");
+            } catch (err) {
+                console.warn("Sound playback blocked", err);
             }
 
             // 3. Immersive Notification
-            toast.custom((t) => (
+            toast.custom(() => (
               <div className="bg-[#0F0F0F] border border-primary/30 p-5 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.6)] flex items-start gap-4 min-w-[320px] animate-in slide-in-from-right duration-500">
                 <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
                   <Printer className="h-6 w-6 text-primary animate-pulse" />

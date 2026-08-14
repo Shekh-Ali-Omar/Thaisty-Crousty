@@ -1,28 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  User, 
-  Shield, 
-  Palette,
-  Globe,
-  Check,
-  ChevronRight,
-  ShoppingBag
-} from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-import { GlassCard } from "@/components/glass/GlassCard";
-import { useHydrated } from "@/lib/hooks";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+import { Shield } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
+import { useHydrated } from "@/lib/hooks";
 import { useLocale } from "@/components/locale-provider";
+
+const langs = [
+  { code: "en", label: "English" },
+  { code: "fr", label: "Français" },
+  { code: "ar", label: "العربية" },
+] as const;
 
 export default function ProfilePage() {
   const isHydrated = useHydrated();
   const { t, locale, setLocale } = useLocale();
-  
+
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -45,103 +39,83 @@ export default function ProfilePage() {
 
   if (!isHydrated || loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      <div className="min-h-screen bg-[#0a0a0a] pt-[68px] flex items-center justify-center">
+         <div className="h-16 w-16 animate-spin rounded-full border-4 border-[#F58220]/20 border-t-[#F58220]" />
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-3xl py-10 px-4 flex flex-col gap-10">
-      {/* Simple Header */}
-      <div className="flex flex-col items-center text-center gap-6">
-        <div className="h-24 w-24 rounded-[2rem] bg-primary/10 flex items-center justify-center border border-primary/20">
-          <User className="h-12 w-12 text-primary glow-primary" />
-        </div>
-        <div>
-          <h1 className="text-4xl font-black tracking-tight text-gradient-white uppercase">
-            {t.profile.title}
-          </h1>
-          <p className="text-muted font-medium mt-2">{t.profile.interface_desc}</p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#0a0a0a] pt-[68px]">
+      <section className="mx-auto w-full px-4 py-10 md:px-8 md:py-16">
+        <h1 className="t-display text-5xl md:text-6xl text-white">
+          {locale === "fr" ? (
+            <>VOTRE <span className="text-[#F58220]">PROFIL</span></>
+          ) : locale === "ar" ? (
+            <>الملف <span className="text-[#F58220]">الشخصي</span></>
+          ) : (
+            <>YOUR <span className="text-[#F58220]">PROFILE</span></>
+          )}
+        </h1>
 
-      <div className="grid grid-cols-1 gap-8">
-        {/* Language Switcher */}
-        <section className="space-y-6">
-          <div className="flex items-center gap-3 px-2">
-            <Globe className="h-5 w-5 text-primary" />
-            <h2 className="text-xl font-black uppercase tracking-[0.3em] text-white/40">{t.profile.language}</h2>
-          </div>
+        <div className="t-panel mt-8 p-5 md:p-8">
+          <h2 className="t-display text-3xl text-white uppercase">{locale === "fr" ? "LANGUE" : locale === "ar" ? "اللغة" : "LANGUAGE"}</h2>
           
-          <GlassCard className="p-8 border-white/5 shadow-2xl">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[
-                { id: "en", label: "English" },
-                { id: "fr", label: "Français" },
-                { id: "ar", label: "العربية" }
-              ].map((lang) => (
-                <button
-                  key={lang.id}
-                  onClick={() => setLocale(lang.id as any)}
-                  className={cn(
-                    "flex flex-col items-center gap-2 p-6 rounded-2xl transition-all border",
-                    locale === lang.id 
-                      ? "bg-primary text-black border-primary shadow-lg scale-105" 
-                      : "glass border-white/5 text-muted hover:text-white"
-                  )}
-                >
-                  <span className="font-black uppercase text-[10px] tracking-widest">{lang.label}</span>
-                  {locale === lang.id && <Check className="h-4 w-4" />}
-                </button>
-              ))}
-            </div>
-          </GlassCard>
-        </section>
+          <div
+            className="mt-4 flex flex-wrap gap-2"
+            dir={locale === "ar" ? "rtl" : "ltr"}
+          >
+            {langs.map((l) => (
+              <button
+                key={l.code}
+                type="button"
+                onClick={() => setLocale(l.code)}
+                aria-pressed={locale === l.code}
+                className={`t-btn-quiet ${
+                  locale === l.code ? "bg-[#F58220] text-[#0a0a0a] border-[#F58220] hover:bg-white hover:border-white" : ""
+                }`}
+              >
+                {l.code.toUpperCase()} · {l.label}
+              </button>
+            ))}
+          </div>
 
-        {/* Navigation Utilities */}
-        <section className="space-y-6">
-           <Link href="/menu">
-                <GlassCard className="p-8 flex items-center justify-between group hover:border-primary/30 transition-all border-white/5">
-                    <div className="flex items-center gap-6">
-                        <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-                            <ShoppingBag className="h-8 w-8 text-primary glow-primary" />
-                        </div>
-                        <div>
-                            <p className="text-xl font-black tracking-tight">{t.menu.viewAll}</p>
-                            <p className="text-sm text-muted">{t.profile.continue_shopping}</p>
-                        </div>
-                    </div>
-                    <ChevronRight className="h-6 w-6 text-white/20 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                </GlassCard>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Link 
+              href="/menu" 
+              className="t-btn flex-1 md:flex-none"
+            >
+              {locale === "fr" ? "CONTINUER VOS ACHATS" : locale === "ar" ? "مواصلة التسوق" : "CONTINUE SHOPPING"} <span className="t-arrow rtl:-scale-x-100">→</span>
             </Link>
-        </section>
+            <Link 
+              href="/track-order" 
+              className="t-btn-quiet flex-1 md:flex-none justify-center"
+            >
+              {locale === "fr" ? "MES COMMANDES" : locale === "ar" ? "طلباتي" : "MY ORDERS"}
+            </Link>
+          </div>
 
-        {/* Conditional Admin Hub */}
-        {isAdmin && (
-          <section className="space-y-6">
-            <div className="flex items-center gap-3 px-2">
-              <Shield className="h-5 w-5 text-primary" />
-              <h2 className="text-xl font-black uppercase tracking-[0.3em] text-white/40">{t.profile.management}</h2>
-            </div>
-            
-            <Link href="/admin">
-                <GlassCard className="p-8 flex items-center justify-between group hover:border-primary/30 transition-all border-white/5">
-                    <div className="flex items-center gap-6">
-                        <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-                            <Shield className="h-8 w-8 text-primary glow-primary" />
-                        </div>
-                        <div>
-                            <p className="text-xl font-black tracking-tight">{t.profile.admin}</p>
-                            <p className="text-sm text-muted">{t.profile.dashboard_desc}</p>
-                        </div>
-                    </div>
-                    <Badge className="bg-primary text-black font-black uppercase text-[10px] tracking-widest px-3">{t.profile.authorized}</Badge>
-                </GlassCard>
-            </Link>
-          </section>
-        )}
-      </div>
+          {isAdmin && (
+            <>
+              <div className="h-px w-full bg-[#1a1a1a] my-10" />
+              <h2 className="t-display text-4xl text-white uppercase flex items-center gap-3">
+                <Shield className="h-8 w-8 text-[#F58220]" />
+                {locale === "fr" ? "ADMINISTRATION" : locale === "ar" ? "الإدارة" : "ADMINISTRATION"}
+              </h2>
+              <p className="mt-2 font-barlow-condensed text-[16px] text-white/50 uppercase tracking-wide">
+                {locale === "fr" ? "Vous avez les droits d'administrateur." : locale === "ar" ? "لديك صلاحيات المسؤول." : "You have admin privileges."}
+              </p>
+              <Link 
+                href="/admin" 
+                className="t-btn-quiet mt-6 inline-flex justify-center w-full md:w-auto"
+                style={{ borderColor: "#F58220", color: "#F58220" }}
+              >
+                {locale === "fr" ? "OUVRIR LE PANNEAU D'ADMINISTRATION" : locale === "ar" ? "فتح لوحة الإدارة" : "OPEN ADMIN DASHBOARD"}
+              </Link>
+            </>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

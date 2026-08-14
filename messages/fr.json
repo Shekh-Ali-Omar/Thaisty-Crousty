@@ -12,43 +12,67 @@
   },
   "home": {
     "title": "Thaisty Crousty",
-    "subtitle": "Dely Ibrahim — Street food, grandes saveurs",
+    "subtitle": "Dely Ibrahim — Cuisine de rue, grandes saveurs",
     "cta": "Commander",
     "featured": "Coups de cœur",
     "hero": {
-      "premium": "Dely Ibrahim",
-      "title": "Goûtez au Premium.",
-      "ourStory": "Notre Histoire",
-      "fastDelivery": "Livraison Rapide",
-      "under30": "Moins de 30 Min"
+      "kicker": "Cuisine de Rue d'Inspiration Thaï — Est. 2024",
+      "ingredients": "Riz Jasmin · Poulet Crousty · Sauces Maison",
+      "sticker": "STREET CERTIFIED ★ BOLD ★",
+      "floating": "Sans compromis. Sans blabla.",
+      "classic": "CLASSIQUE",
+      "spirit": "100% Esprit Thaï",
+      "sideLabel": "Cuisine de Rue d'Inspiration Thaï"
     },
     "whyUs": {
-      "title": "Coups de cœur",
-      "recipes": {
-        "title": "Recettes Uniques",
-        "desc": "Mélanges secrets d'épices et techniques artisanales introuvables ailleurs."
-      },
-      "service": {
-        "title": "Service Éclair",
-        "desc": "Premium ne signifie pas lent. Nous livrons des saveurs haut de gamme en un temps record."
-      },
-      "quality": {
-        "title": "Qualité Élite",
-        "desc": "Ingrédients 100% frais et locaux pour un croquant et une saveur ultimes."
-      }
+      "title1": "POURQUOI",
+      "title2": "THAISTY",
+      "card1Title": "SAUCES D'INSPIRATION THAÏ",
+      "card1Desc": "Curry, sucré, épicé — fait maison.",
+      "card2Title": "FRIT À LA COMMANDE",
+      "card2Desc": "Rien n'attend sous une lampe. Le croquant est garanti.",
+      "card3Title": "LIVRAISON RAPIDE ET CHAUDE",
+      "card3Desc": "Emballage isolant, livreurs rapides, zéro ramollissement."
     },
     "testimonials": {
-      "title": "Ce Que Disent Nos Fans",
-      "reviews": [
-        {
-          "name": "Yanis K.",
-          "text": "Meilleur crousty mix d'Alger. La sauce est vraiment addictive !"
-        },
-        {
-          "name": "Amine S.",
-          "text": "Vraie street food premium. La présentation est aussi bonne que le goût."
-        }
+      "title1": "LA",
+      "title2": "RUE",
+      "title3": "PARLE"
+    },
+    "bowlDrop": {
+      "bestseller": "★ BESTSELLER ★ MAISON ★",
+      "number1": "№1",
+      "fanFavorite": "Coup de Cœur",
+      "signature": "La Signature",
+      "title1": "LA",
+      "title2": "RÉVÉLATION",
+      "title3": "DU BOL.",
+      "ingredients": [
+        "Riz blanc",
+        "Poulet crousty",
+        "Sauce blanche maison",
+        "Oignons frits",
+        "Persil frais"
       ]
+    },
+    "popular": {
+      "title1": "COUPS DE",
+      "title2": "CŒUR",
+      "seeAll": "VOIR TOUT"
+    },
+    "manifesto": {
+      "label": "— Manifeste de la Marque",
+      "title1": "TU AIMES",
+      "title2": "AUJOURD'HUI.",
+      "title3": "TU AIMERAS",
+      "title4": "DEMAIN.",
+      "sideLabel": "Sans compromis. Sans blabla."
+    },
+    "faqSection": {
+      "title": "FAQ",
+      "stillStuck": "Encore coincé ?",
+      "contactUs": "Contactez-nous",
+      "bowlsStart": "les bols commencent à"
     }
   },
   "menu": {
@@ -63,17 +87,21 @@
     "clearFilters": "Effacer les filtres",
     "viewAll": "Voir Tout le Menu",
     "categories": {
+      "bestsellers1": "MEILLEURES",
+      "bestsellers2": "VENTES",
       "all": "Tout",
       "crousty": "Crousty",
       "spicy": "Épicé",
-      "sweet": "Sucré",
-      "drink": "Boissons"
-    }
+      "sweet": "Sucré"
+    },
+    "findBowl": "TROUVE TON BOL",
+    "theMenu1": "LE",
+    "theMenu2": "MENU"
   },
   "about": {
     "legacy": "Notre Héritage",
     "title": "Une Histoire de Passion & de Croquant.",
-    "desc": "Né au cœur de Dely Ibrahim, Thaisty Crousty a été créé pour redéfinir la street food. Nous pensons que les repas rapides ne doivent jamais compromettre la qualité, le style ou l'âme.",
+    "desc": "Né au cœur de Dely Ibrahim, Thaisty Crousty a été créé pour redéfinir la cuisine de rue. Nous pensons que les repas rapides ne doivent jamais compromettre la qualité, le style ou l'âme.",
     "recipe": {
       "title": "La Recette Originale",
       "desc": "Perfectionnée au cours de 3 ans de tests."
@@ -88,7 +116,7 @@
         "desc": "Chaque burger, chaque dessert est préparé comme s'il était destiné à notre propre famille."
       },
       "premium": {
-        "title": "Premium Uniquement",
+        "title": "Haut de Gamme Uniquement",
         "desc": "Du pain à l'emballage, nous n'utilisons que les meilleurs matériaux disponibles."
       },
       "vision": {
@@ -99,7 +127,7 @@
     },
     "cta": {
       "title": "Prêt à rejoindre l'élite ?",
-      "desc": "Découvrez le croquant dont tout le monde parle. Votre expérience premium est à portée de clic.",
+      "desc": "Découvrez le croquant dont tout le monde parle. Votre expérience d'exception est à portée de clic.",
       "button": "Explorer Notre Menu"
     },
     "quote": "La qualité n'est pas un acte, c'est une habitude.",
@@ -108,7 +136,12 @@
       "spices": "Épices Secrètes",
       "recipes": "Recettes Artisanales",
       "chefs": "Chefs d'Élite"
-    }
+    },
+    "manifesto": "MANIFESTE",
+    "thaiFlavor": "SAVEUR THAÏ.",
+    "streetAttitude1": "ATTITUDE",
+    "streetAttitude2": "STREET.",
+    "marquee": "FRIT À LA COMMANDE • SAUCE GÉNÉREUSE • PAS MOLLASSON •"
   },
   "contact": {
     "title": "Connectons-nous.",
@@ -153,7 +186,16 @@
       "title": "Heures de Visite",
       "desc": "Ouvert tous les jours de 11h00 à 23h00. Le week-end, nous restons ouverts jusqu'à minuit pour les envies nocturnes."
     },
-    "follow": "Suivez notre aventure"
+    "follow": "Suivez notre aventure",
+    "kicker": "VENEZ NOUS VOIR",
+    "title1": "TROUVEZ-",
+    "title2": "NOUS.",
+    "addressLabel": "ADRESSE",
+    "hoursLabel": "HORAIRES",
+    "hoursValue": "11:00 — 23:30 · TOUS LES JOURS",
+    "openNow": "OUVERT",
+    "loadingMap": "CHARGEMENT...",
+    "getDirections": "ITINÉRAIRE"
   },
   "faq": {
     "title": "Foire Aux Questions.",
@@ -191,7 +233,7 @@
     }
   },
   "footer": {
-    "brandDesc": "Découvrez la meilleure street food de Dely Ibrahim. Conçu avec passion, servi avec style.",
+    "brandDesc": "Découvrez la meilleure cuisine de rue de Dely Ibrahim. Conçu avec passion, servi avec style.",
     "support": "Support",
     "visit": "Nous Visiter",
     "privacy": "Politique de Confidentialité",
@@ -203,7 +245,7 @@
   "cart": {
     "title": "Votre panier",
     "empty": "Votre panier est vide",
-    "emptySubtitle": "Ajoutez un peu de croquant premium à votre journée.",
+    "emptySubtitle": "Ajoutez un peu de croquant haut de gamme à votre journée.",
     "total": "Total",
     "checkout": "Payer",
     "remove": "Supprimer",
@@ -216,11 +258,17 @@
     "delivery": "Livraison",
     "deliveryFree": "Gratuit",
     "review": "Vérifiez votre sélection",
-    "secure": "Paiement sécurisé via WhatsApp"
+    "secure": "Paiement sécurisé via WhatsApp",
+    "emptyTitle1": "VOTRE",
+    "emptyTitle2": "PANIER",
+    "emptyTitle3": "EST VIDE",
+    "crousty": "CROUSTY",
+    "deliveryLabel": "Livraison",
+    "continueShopping": "Continuer les achats"
   },
   "checkout": {
     "title": "Paiement",
-    "subtitle": "Finalisez votre expérience premium",
+    "subtitle": "Finalisez votre expérience d'exception",
     "stepInfo": "Détails",
     "stepReview": "Révision",
     "stepConfirm": "Confirmer",
@@ -244,7 +292,11 @@
       "name": "Le nom est requis",
       "phone": "Téléphone valide requis",
       "address": "L'adresse est requise"
-    }
+    },
+    "emptyTitle1": "VOTRE",
+    "emptyTitle2": "PANIER",
+    "emptyTitle3": "EST VIDE",
+    "continue": "CONTINUER"
   },
   "order": {
     "success": "Commande Soumise avec Succès",
@@ -285,7 +337,7 @@
     "language": "Langue",
     "admin": "Tableau de bord",
     "appearance": "Apparence",
-    "interface_desc": "Personnalisez votre expérience de street food premium.",
+    "interface_desc": "Personnalisez votre expérience de cuisine de rue haut de gamme.",
     "interface_system": "Système Visuel",
     "theme": {
       "light": "Clair",
@@ -299,7 +351,7 @@
     "dashboard_desc": "Accéder au centre de contrôle et aux analyses.",
     "continue_shopping": "Continuer les Achats",
     "identity_required": "Identité Requise",
-    "identity_desc": "Connectez-vous pour synchroniser vos commandes, adresses et préférences premium.",
+    "identity_desc": "Connectez-vous pour synchroniser vos commandes, adresses et préférences haut de gamme.",
     "management_login": "Connexion de Gestion",
     "logistics": "Logistique",
     "track_desc": "Identifiez et suivez votre logistique active.",
@@ -316,9 +368,9 @@
   },
   "product": {
     "description": "Description",
-    "description_fallback": "Chaque ingrédient est sélectionné pour un croquant maximal et une saveur artisanale. Un véritable chef-d'œuvre de street food préparé avec soin.",
+    "description_fallback": "Chaque ingrédient est sélectionné pour un croquant maximal et une saveur artisanale. Un véritable chef-d'œuvre de la cuisine de rue préparé avec soin.",
     "market_description": "Description du Marché",
-    "premium_selection": "Sélection Premium",
+    "premium_selection": "Sélection Haut de Gamme",
     "in_stock": "En Stock & Prêt",
     "authorized_listing": "Annonce Autorisée",
     "culinary_composition": "Composition Culinaire",
@@ -327,7 +379,7 @@
     "configure_volume": "Configurer le Volume",
     "selection_added": "Sélection Ajoutée",
     "authorized": "Autorisé",
-    "platform_footer": "Thaisty Crousty - Street Food Premium Alger"
+    "platform_footer": "Thaisty Crousty - Cuisine de Rue Haut de Gamme Alger"
   },
   "admin": {
     "login": "Connexion Admin",
@@ -394,9 +446,36 @@
   "common": {
     "loading": "Chargement…",
     "error": "Une erreur est survenue",
-    "premium": "Premium",
+    "premium": "Haut de Gamme",
     "instagram": "Instagram",
     "facebook": "Facebook",
     "back_to_menu": "Retour au Menu"
+  },
+  "productDetails": {
+    "badges": {
+      "bestSeller": "MEILLEURE VENTE",
+      "new": "NOUVEAU",
+      "spicy": "ÉPICÉ"
+    },
+    "chooseSauce": "CHOISIS TA SAUCE",
+    "sauces": {
+      "curry": "CURRY",
+      "white": "BLANCHE",
+      "sweet": "SUCRÉE",
+      "spicy": "PIQUANTE",
+      "mayo": "MAYO"
+    },
+    "actions": {
+      "addToCart": "AJOUTER AU PANIER",
+      "added": "AJOUTÉ !"
+    },
+    "crunchLevel": "NIVEAU DE CROQUANT",
+    "goesHardWith1": "PARFAIT",
+    "goesHardWith2": "AVEC",
+    "goesHardWith3": "ÇA"
+  },
+  "faqPage": {
+    "kicker": "BONNES QUESTIONS",
+    "stillNeedHelp": "ENCORE BESOIN D'AIDE"
   }
 }

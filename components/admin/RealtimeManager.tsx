@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast, Toaster } from "sonner";
 import useSound from "use-sound";
 import { createClient } from "@/lib/supabase/client";
-import { Bell, ShoppingBag, ArrowRight } from "lucide-react";
+import { ShoppingBag, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -35,7 +35,7 @@ export function RealtimeManager() {
           // Play notification sound
           try {
             playPing();
-          } catch (e) {
+          } catch {
             console.warn("Sound playback blocked by browser policy");
           }
 

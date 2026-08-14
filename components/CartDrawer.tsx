@@ -3,14 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { Minus, Plus, ShoppingBag, Trash2, X, ArrowLeft } from "lucide-react";
+import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useLocale } from "@/components/locale-provider";
 import { formatPrice, cn } from "@/lib/utils";
 import { resolveProductImageUrl } from "@/lib/image";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useHydrated } from "@/lib/hooks";
 
 export function CartDrawer() {
@@ -37,46 +35,46 @@ export function CartDrawer() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm"
             onClick={closeCart}
             aria-hidden
           />
           <motion.aside
-            initial={{ x: isRtl ? "-100%" : "100%", opacity: 0.8 }}
+            initial={{ x: isRtl ? "-100%" : "100%", opacity: 1 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: isRtl ? "-100%" : "100%", opacity: 0.8 }}
+            exit={{ x: isRtl ? "-100%" : "100%", opacity: 1 }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className={cn(
-              "fixed bottom-0 top-0 z-[70] flex w-full max-w-md flex-col glass-strong md:bottom-4 md:top-4 md:rounded-2xl md:max-h-[calc(100dvh-2rem)]",
-              isRtl ? "left-0 border-e border-white/10 md:ms-4" : "right-0 border-s border-white/10 md:me-4"
+              "fixed bottom-0 top-0 z-[70] flex w-full max-w-lg flex-col bg-[#0a0a0a] t-grain shadow-2xl end-0 border-s-2 border-[#1a1a1a]"
             )}
             role="dialog"
             aria-label={t.cart.title}
           >
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-              <div className="flex items-center gap-2">
-                <ShoppingBag className="h-5 w-5 text-primary" />
-                <h2 className="text-lg font-bold">{t.cart.title}</h2>
+            <div className="flex items-center justify-between border-b-2 border-[#1a1a1a] px-6 py-6 bg-[#0a0a0a]/90 backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <h2 className="t-display text-4xl text-white mt-1">{t.cart.title}</h2>
               </div>
               <button
                 type="button"
                 onClick={closeCart}
-                className="flex h-12 w-12 items-center justify-center rounded-xl glass hover:glass-strong"
+                className="flex h-12 w-12 items-center justify-center text-white/50 hover:text-[#F58220] transition-colors"
                 aria-label="Close"
               >
-                <X className="h-5 w-5" />
+                <X className="h-8 w-8" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-4 py-3">
+            <div className="flex-1 overflow-y-auto">
               {items.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
-                  <ShoppingBag className="h-12 w-12 text-muted opacity-20" />
-                  <p className="text-muted">{t.cart.empty}</p>
-                  <Button variant="glass" onClick={closeCart}>{t.profile.continue_shopping}</Button>
+                <div className="flex flex-col items-center justify-center h-full gap-6 text-center px-6">
+                  <ShoppingBag className="h-20 w-20 text-white/10" />
+                  <p className="font-barlow-condensed text-2xl font-bold uppercase text-white/50">{t.cart.empty}</p>
+                  <button className="t-btn-ghost mt-2" onClick={closeCart}>
+                    {t.profile.continue_shopping} <span className="t-arrow rtl:-scale-x-100">→</span>
+                  </button>
                 </div>
               ) : (
-                <ul className="flex flex-col gap-3">
+                <ul className="flex flex-col gap-4 p-6">
                   {items.map((item) => {
                     const itemImageUrl = resolveProductImageUrl(item.image);
                     return (
@@ -85,97 +83,97 @@ export function CartDrawer() {
                         layout
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="glass rounded-xl p-3"
+                        className="t-card p-4"
                       >
-                        <div className="flex gap-3">
-                          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl">
+                        <div className="flex gap-4">
+                          <div className="relative h-24 w-24 shrink-0 overflow-hidden bg-[#111]">
                             {itemImageUrl ? (
                               <Image
                                 src={itemImageUrl}
                                 alt={item.name}
                                 fill
                                 className="object-cover"
-                                sizes="64px"
+                                sizes="96px"
                               />
                             ) : (
-                              <div className="flex h-full items-center justify-center bg-black/40 text-2xl">
+                              <div className="flex h-full items-center justify-center bg-[#111] text-3xl">
                                 🍗
                               </div>
                             )}
                           </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-start justify-between gap-2">
-                            <p className="font-semibold leading-tight">{item.name}</p>
-                            <button
-                              type="button"
-                              onClick={() => removeItem(item.productId)}
-                              className="text-muted hover:text-red-400 p-1"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </div>
-                          <p className="text-sm text-primary font-medium">
-                            {formatPrice(item.price)}
-                          </p>
-                          <div className="mt-2 flex items-center gap-2">
-                            <Button
-                              size="icon"
-                              variant="glass"
-                              className="h-9 w-9"
-                              onClick={() =>
-                                updateQuantity(item.productId, item.quantity - 1)
+                          <div className="min-w-0 flex-1 flex flex-col">
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="font-barlow-condensed text-2xl font-bold uppercase text-white leading-tight pe-4">{item.name}</p>
+                              <button
+                                type="button"
+                                onClick={() => removeItem(item.productId)}
+                                className="text-white/30 hover:text-red-500 transition-colors p-1"
+                              >
+                                <Trash2 className="h-5 w-5" />
+                              </button>
+                            </div>
+                            
+                            <p className="t-price text-2xl text-[#F58220] mt-1">
+                              {formatPrice(item.price)}
+                            </p>
+                            
+                            <div className="mt-auto pt-4 flex items-center justify-between gap-4">
+                              {/* Quantity Selector */}
+                              <div className="flex items-center border-2 border-white bg-[#0a0a0a]">
+                                <button
+                                  type="button"
+                                  onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                                  className="grid h-10 w-10 place-items-center hover:bg-white/5 transition-colors text-white"
+                                >
+                                  <Minus className="h-4 w-4" />
+                                </button>
+                                <span className="t-display w-10 text-center text-xl text-white">
+                                  {item.quantity}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                                  className="grid h-10 w-10 place-items-center hover:bg-white/5 transition-colors text-white"
+                                >
+                                  <Plus className="h-4 w-4" />
+                                </button>
+                              </div>
+                              <span className="t-price text-2xl text-white">
+                                {formatPrice(item.price * item.quantity)}
+                              </span>
+                            </div>
+                            
+                            <Input
+                              placeholder={t.cart.notePlaceholder}
+                              value={item.note ?? ""}
+                              onChange={(e) =>
+                                setNote(item.productId, e.target.value)
                               }
-                            >
-                              <Minus className="h-3.5 w-3.5" />
-                            </Button>
-                            <span className="min-w-6 text-center font-bold">
-                              {item.quantity}
-                            </span>
-                            <Button
-                              size="icon"
-                              variant="glass"
-                              className="h-9 w-9"
-                              onClick={() =>
-                                updateQuantity(item.productId, item.quantity + 1)
-                              }
-                            >
-                              <Plus className="h-3.5 w-3.5" />
-                            </Button>
-                            <span className="ms-auto text-sm font-semibold">
-                              {formatPrice(item.price * item.quantity)}
-                            </span>
+                              className="t-field mt-4 h-10 text-sm border-white placeholder:text-white"
+                            />
                           </div>
-                          <Input
-                            placeholder={t.cart.notePlaceholder}
-                            value={item.note ?? ""}
-                            onChange={(e) =>
-                              setNote(item.productId, e.target.value)
-                            }
-                            className="mt-2 h-9 text-xs glass border-white/10"
-                          />
                         </div>
-                      </div>
-                    </motion.li>
-                  );
-                })}
+                      </motion.li>
+                    );
+                  })}
                 </ul>
               )}
             </div>
 
             {items.length > 0 && (
-              <div className="border-t border-white/10 p-4 glass space-y-3">
-                <div className="mb-1 flex justify-between text-lg font-bold">
-                  <span>{t.cart.total}</span>
-                  <span className="text-gradient">{formatPrice(total)}</span>
+              <div className="border-t-2 border-[#F58220] p-6 bg-[#0a0a0a]">
+                <div className="mb-6 flex justify-between items-end">
+                  <span className="font-barlow-condensed text-xl font-bold uppercase text-white/70">{t.cart.total}</span>
+                  <span className="t-price text-4xl text-[#F58220]">{formatPrice(total)}</span>
                 </div>
-                
-                <div className="flex flex-col gap-2">
-                    <Button asChild size="lg" className="w-full bg-primary text-black font-bold" onClick={closeCart}>
-                      <Link href="/checkout">{t.cart.checkout}</Link>
-                    </Button>
-                    <Button variant="glass" className="w-full h-12 rounded-xl font-medium" onClick={closeCart}>
-                      {t.profile.continue_shopping}
-                    </Button>
+
+                <div className="flex gap-3">
+                  <button className="t-btn-ghost flex-1 text-center px-2 py-3" onClick={closeCart}>
+                    {t.profile.continue_shopping}
+                  </button>
+                  <Link href="/checkout" onClick={closeCart} className="t-btn flex-1 text-center text-xl px-2 py-3">
+                    {t.cart.checkout} <span className="t-arrow rtl:-scale-x-100">→</span>
+                  </Link>
                 </div>
               </div>
             )}

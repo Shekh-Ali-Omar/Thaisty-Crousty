@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { createClient } from "@/lib/supabase/client";
-import { Bell, CheckCircle2, ShoppingBag, Info, Trash2, ExternalLink, RefreshCw } from "lucide-react";
+import { Bell, CheckCircle2, ShoppingBag, Info, Trash2, ExternalLink, RefreshCw, type LucideIcon } from "lucide-react";
 import { GlassCard } from "@/components/glass/GlassCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +42,7 @@ export default function NotificationsPage() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
 
     const supabase = createClient();
@@ -89,7 +90,7 @@ export default function NotificationsPage() {
     setNotifications(prev => prev.filter(n => n.id !== id));
   };
 
-  const icons: Record<string, any> = {
+  const icons: Record<string, LucideIcon> = {
     new_order: ShoppingBag,
     system: Info
   };

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, UtensilsCrossed, ShoppingBag, Search } from "lucide-react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { Home, UtensilsCrossed, ShoppingBag, Truck } from "lucide-react";
+import { useMotionValueEvent, useScroll } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/components/locale-provider";
 import { useCartStore } from "@/store/cartStore";
@@ -14,7 +14,7 @@ const links = [
   { href: "/", icon: Home, key: "home" as const },
   { href: "/menu", icon: UtensilsCrossed, key: "menu" as const },
   { href: "/cart", icon: ShoppingBag, key: "cart" as const, openDrawer: true },
-  { href: "/track-order", icon: Search, key: "track" as const },
+  { href: "/track-order", icon: Truck, key: "track" as const },
 ];
 
 export function BottomNav() {
@@ -39,69 +39,57 @@ export function BottomNav() {
   if (pathname.startsWith("/admin")) return null;
 
   return (
-    <>
-      {/* Bottom Scrim for Layering */}
-      <div className={cn(
-          "fixed bottom-0 left-0 right-0 z-[49] h-32 scrim-bottom transition-opacity duration-500 md:hidden",
-          isVisible ? "opacity-100" : "opacity-0"
-      )} />
+    <nav 
+      className={cn(
+        "mobile-only md:hidden fixed bottom-0 left-0 right-0 z-[300] bg-[#0a0a0a] border-t border-[#1c1c1c] transition-transform duration-300 pb-[env(safe-area-inset-bottom)]",
+        isVisible ? "translate-y-0" : "translate-y-full"
+      )}
+    >
+      <div className="mx-auto flex h-[68px] max-w-lg items-stretch justify-around px-2">
+        {links.map(({ href, icon: Icon, key, openDrawer }) => {
+          const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
 
-      <motion.nav 
-        initial={{ y: 0 }}
-        animate={{ y: isVisible ? 0 : 120 }}
-        transition={{ type: "spring", stiffness: 260, damping: 32 }}
-        className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-safe md:hidden"
-      >
-        <div className="mx-auto mb-4 flex h-16 max-w-lg items-stretch justify-around rounded-[1.5rem] glass-strong border border-white/5 shadow-2xl">
-          {links.map(({ href, icon: Icon, key, openDrawer }) => {
-            const active =
-              href === "/" ? pathname === "/" : pathname.startsWith(href);
-
-            const content = (
-              <>
-                <div className="relative">
-                  <Icon className={cn("h-5 w-5 transition-all duration-300", active ? "text-primary glow-primary scale-110" : "text-white/40")} strokeWidth={active ? 3 : 2} />
-                  {key === "cart" && isHydrated && itemCount > 0 && (
-                    <span className="absolute -end-2 -top-2 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-primary px-1 text-[9px] font-black text-black shadow-[0_0_10px_rgba(255,140,0,0.5)]">
-                      {itemCount}
-                    </span>
-                  )}
-                </div>
-                <span className={cn("text-[9px] font-black uppercase tracking-tighter transition-colors", active ? "text-primary" : "text-white/40")}>
-                  {t.nav[key]}
-                </span>
-                {active && (
-                  <div className="absolute bottom-1 w-1 h-1 rounded-full bg-primary glow-primary" />
+          const content = (
+            <>
+              <div className="relative">
+                <Icon className={cn("h-5 w-5 transition-transform", active ? "scale-110" : "")} strokeWidth={active ? 2.5 : 2} />
+                {key === "cart" && isHydrated && itemCount > 0 && (
+                  <span className="absolute -right-2 rtl:-left-2 rtl:right-auto -top-2 flex h-4 min-w-[16px] items-center justify-center bg-[#f58220] px-1 text-[10px] font-black text-[#0a0a0a]">
+                    {itemCount}
+                  </span>
                 )}
-              </>
-            );
+              </div>
+              <span className="text-[10px] font-barlow-condensed font-bold uppercase tracking-[0.1em] mt-1">
+                {t.nav[key]}
+              </span>
+            </>
+          );
 
-            const className = cn(
-              "relative flex flex-1 flex-col items-center justify-center gap-0.5 transition-colors duration-200",
-              active ? "text-primary" : "text-white/40"
-            );
+          const className = cn(
+            "relative flex flex-1 flex-col items-center justify-center transition-colors px-1",
+            active ? "text-[#f58220]" : "text-white/40 hover:text-white/80"
+          );
 
-            if (openDrawer) {
-              return (
-                <button
-                  key={href}
-                  type="button"
-                  onClick={openCart}
-                  className={className}
-                >
-                  {content}
-                </button>
-              );
-            }
-
+          if (openDrawer) {
             return (
-              <Link key={href} href={href} className={className}>
+              <button
+                key={href}
+                type="button"
+                onClick={openCart}
+                className={className}
+              >
                 {content}
-              </Link>
+              </button>
             );
-          })}
-        </div>
-      </motion.nav>
-    </>
+          }
+
+          return (
+            <Link key={href} href={href} className={className}>
+              {content}
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
   );
 }

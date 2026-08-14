@@ -14,7 +14,7 @@ import {
 import { GlassCard } from "@/components/glass/GlassCard";
 
 interface AnalyticsChartsProps {
-  data: any[];
+  data: Record<string, unknown>[];
 }
 
 export function AnalyticsCharts({ data }: AnalyticsChartsProps) {

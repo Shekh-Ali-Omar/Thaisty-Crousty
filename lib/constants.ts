@@ -14,7 +14,6 @@ export const CATEGORIES = [
   "crousty",
   "spicy",
   "sweet",
-  "drink",
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];
@@ -24,7 +23,6 @@ export const CATEGORY_LABELS: Record<string, string> = {
   crousty: "Crousty",
   spicy: "Spicy",
   sweet: "Sweet",
-  drink: "Drinks",
 };
 
 export const ORDER_STATUSES = [

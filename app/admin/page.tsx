@@ -5,12 +5,10 @@ import {
   TrendingUp, 
   DollarSign, 
   RefreshCw,
-  ShoppingBag,
   Star,
   Clock,
   CheckCircle2,
-  AlertCircle,
-  Activity
+  AlertCircle
 } from "lucide-react";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { createClient } from "@/lib/supabase/client";
@@ -97,7 +95,7 @@ export default function AdminPage() {
             trendMap[orderDateStr].orders += 1;
           }
 
-          o.order_items.forEach((oi: any) => {
+          o.order_items.forEach((oi: { product_name: string; quantity: number }) => {
             productCounts[oi.product_name] = (productCounts[oi.product_name] || 0) + oi.quantity;
           });
         }
@@ -134,6 +132,7 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadAnalytics();
   }, []);
 

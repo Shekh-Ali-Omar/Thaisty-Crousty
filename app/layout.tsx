@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Cairo } from "next/font/google";
+import { Inter, Cairo, Anton } from "next/font/google";
 import { Providers } from "@/components/providers";
 import { ThemeProvider } from "@/components/theme-provider";
 import { BRAND_FULL } from "@/lib/constants";
@@ -15,6 +15,12 @@ const cairo = Cairo({
   variable: "--font-cairo",
 });
 
+const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-anton",
+});
+
 export const metadata: Metadata = {
   title: BRAND_FULL,
   description: "Premium Street Food Experience",
@@ -28,7 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${cairo.variable} h-full`}
+      className={`${inter.variable} ${cairo.variable} ${anton.variable} h-full`}
       suppressHydrationWarning
     >
       <body

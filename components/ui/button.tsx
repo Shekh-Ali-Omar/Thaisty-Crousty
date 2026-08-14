@@ -18,6 +18,10 @@ const buttonVariants = cva(
         destructive: "bg-red-600/90 text-white hover:bg-red-600",
         outline:
           "border border-primary/40 text-primary glass hover:glass-glow hover:scale-[1.02]",
+        brutalist:
+          "rounded-none bg-primary text-black font-anton uppercase tracking-wide border-2 border-primary box-shadow-[6px_6px_0px_#fff] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[8px_8px_0px_#fff]",
+        "brutalist-ghost":
+          "rounded-none bg-transparent text-primary font-anton uppercase tracking-wide border-2 border-primary box-shadow-[4px_4px_0px_#ff5500] hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[6px_6px_0px_#ff5500]",
       },
       size: {
         default: "h-12 px-5",
