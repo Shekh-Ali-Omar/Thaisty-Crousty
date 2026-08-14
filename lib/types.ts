@@ -1,6 +1,18 @@
 export type OrderStatus = "pending" | "confirmed" | "preparing" | "ready" | "delivered" | "cancelled";
 export type PaymentStatus = "unpaid" | "paid" | "refunded";
 
+export type CategoryItem = {
+  id: string;
+  restaurant_id: string;
+  slug: string;
+  name_en: string;
+  name_fr: string | null;
+  name_ar: string | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Product = {
   id: string;
   restaurant_id: string;

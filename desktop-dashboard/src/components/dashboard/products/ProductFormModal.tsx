@@ -13,8 +13,8 @@ import { RESTAURANT_ID, STORAGE_BUCKET } from '@/lib/constants';
 import { supabase } from '../../../lib/supabase';
 import { useLocale } from '@/components/locale-provider';
 import { toast } from 'sonner';
-
-const ADMIN_CATEGORIES = ["crousty", "spicy", "sweet", "drink"] as const;
+import type { CategoryItem } from '@/lib/types';
+import { logAction } from '@/lib/admin/activity';
 
 const productSchema = z.object({
   name_en: z.string().min(2, "English name is required"),
@@ -36,11 +36,12 @@ type ProductFormValues = z.infer<typeof productSchema>;
 
 interface ProductFormModalProps {
   product?: Product | null;
+  categories: CategoryItem[];
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export function ProductFormModal({ product, onClose, onSuccess }: ProductFormModalProps) {
+export function ProductFormModal({ product, categories, onClose, onSuccess }: ProductFormModalProps) {
   const { t, dir } = useLocale();
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<string[]>(product?.images || (product?.image_url ? [product.image_url] : []));
@@ -143,10 +144,14 @@ export function ProductFormModal({ product, onClose, onSuccess }: ProductFormMod
           .update(payload)
           .eq("id", product.id);
         if (err) throw err;
+        await logAction('update', 'product', product.id, `Updated product: ${payload.name}`);
         toast.success("Product updated successfully");
       } else {
-        const { error: err } = await supabase.from("products").insert(payload);
+        const { data: inserted, error: err } = await supabase.from("products").insert(payload).select().single();
         if (err) throw err;
+        if (inserted) {
+          await logAction('create', 'product', inserted.id, `Created product: ${payload.name}`);
+        }
         toast.success("Product created successfully");
       }
       onSuccess();
@@ -313,9 +318,14 @@ export function ProductFormModal({ product, onClose, onSuccess }: ProductFormMod
                     <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/40 ml-1">{t.admin.category}</label>
                         <select {...register("category")} className="w-full bg-white/5 border border-white/10 rounded-xl h-14 px-6 text-white font-black uppercase tracking-widest outline-none focus:border-primary/50 transition-all appearance-none">
-                            {ADMIN_CATEGORIES.map((c) => (
-                                <option key={c} value={c} className="bg-black">{c.toUpperCase()}</option>
+                            {categories.map((c) => (
+                                <option key={c.slug} value={c.slug} className="bg-black">
+                                    {c.name_en.toUpperCase()}
+                                </option>
                             ))}
+                            {categories.length === 0 && (
+                                <option value="crousty" className="bg-black">CROUSTY (DEFAULT)</option>
+                            )}
                         </select>
                     </div>
                 </section>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Package, ClipboardList, LogOut, ShieldCheck, Bell, History, Printer } from "lucide-react";
+import { LayoutDashboard, Package, ClipboardList, LogOut, ShieldCheck, Bell, History, Printer, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -20,9 +20,11 @@ export function AdminNav() {
   const links = [
     { href: "/admin", icon: LayoutDashboard, label: t.admin.overview },
     { href: "/admin/products", icon: Package, label: t.admin.menu_catalog },
+    { href: "/admin/categories", icon: LayoutDashboard, label: "Categories" },
     { href: "/admin/orders", icon: ClipboardList, label: t.admin.order_stream },
     { href: "/admin/printing", icon: Printer, label: "Printing Status" },
     { href: "/admin/notifications", icon: Bell, label: t.admin.alerts },
+    { href: "/admin/settings", icon: Settings, label: "Settings" },
     { href: "/admin/activity", icon: History, label: t.admin.audit_trail },
   ];
 

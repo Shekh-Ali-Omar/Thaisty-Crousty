@@ -7,14 +7,14 @@ import { supabase, getPublicImageUrl } from '../../../lib/supabase';
 import { useLocale } from '@/components/locale-provider';
 import { ProductCard } from './ProductCard';
 import { ProductFormModal } from './ProductFormModal';
-import { Product } from '@/lib/types';
+import { Product, CategoryItem } from '@/lib/types';
 import { toast } from 'sonner';
-
-const CATEGORIES = ["all", "crousty", "spicy", "sweet", "drink"];
+import { logAction } from '@/lib/admin/activity';
 
 export function ProductManager() {
   const { t, locale, dir } = useLocale();
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -34,13 +34,16 @@ export function ProductManager() {
   const loadProducts = useCallback(async () => {
     setLoading(true);
     try {
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .order('created_at', { ascending: false });
+        const [productsRes, categoriesRes] = await Promise.all([
+          supabase.from('products').select('*').order('created_at', { ascending: false }),
+          supabase.from('categories').select('*').order('sort_order')
+        ]);
         
-        if (!error && data) {
-          setProducts(mapProducts(data));
+        if (!productsRes.error && productsRes.data) {
+          setProducts(mapProducts(productsRes.data));
+        }
+        if (!categoriesRes.error && categoriesRes.data) {
+          setCategories(categoriesRes.data as CategoryItem[]);
         }
     } finally {
         setLoading(false);
@@ -81,6 +84,7 @@ export function ProductManager() {
     try {
         const { error } = await supabase.from('products').delete().eq('id', product.id);
         if (error) throw error;
+        await logAction('delete', 'product', product.id, `Permanently deleted product: ${product.name_en || product.name}`);
         toast.success("Product deleted successfully");
     } catch (e) {
         toast.error("Failed to delete product");
@@ -131,13 +135,19 @@ export function ProductManager() {
 
         <div className="flex items-center gap-4 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0">
             <div className="flex items-center gap-2 p-2 bg-white/5 rounded-2xl border border-white/10 shrink-0">
-                {CATEGORIES.map(cat => (
+                <button
+                    onClick={() => setCategoryFilter('all')}
+                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${categoryFilter === 'all' ? 'bg-primary text-black' : 'text-white/40 hover:text-white'}`}
+                >
+                    ALL
+                </button>
+                {categories.map(cat => (
                     <button
-                        key={cat}
-                        onClick={() => setCategoryFilter(cat)}
-                        className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${categoryFilter === cat ? 'bg-primary text-black' : 'text-white/40 hover:text-white'}`}
+                        key={cat.slug}
+                        onClick={() => setCategoryFilter(cat.slug)}
+                        className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${categoryFilter === cat.slug ? 'bg-primary text-black' : 'text-white/40 hover:text-white'}`}
                     >
-                        {cat}
+                        {cat.name_en}
                     </button>
                 ))}
             </div>
@@ -202,6 +212,7 @@ export function ProductManager() {
       {isFormOpen && (
         <ProductFormModal 
             product={editingProduct} 
+            categories={categories}
             onClose={() => setIsFormOpen(false)}
             onSuccess={() => {
                 setIsFormOpen(false);

@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { ProductForm } from "@/components/admin/ProductForm";
 import { GlassCard } from "@/components/glass/GlassCard";
-import type { Product } from "@/lib/types";
+import type { Product, CategoryItem } from "@/lib/types";
 import { RESTAURANT_ID, STORAGE_BUCKET } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/client";
 import { formatPrice, cn } from "@/lib/utils";
@@ -21,6 +21,7 @@ import { useLocale } from "@/components/locale-provider";
 export default function AdminProductsPage() {
   const { t } = useLocale();
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Product | null | "new">(null);
 
@@ -28,14 +29,17 @@ export default function AdminProductsPage() {
     setLoading(true);
     try {
         const supabase = createClient();
-        const { data, error } = await supabase
-          .from("products")
-          .select("*")
-          .eq("restaurant_id", RESTAURANT_ID)
-          .order("name");
         
-        if (!error) {
-          setProducts((data as Product[]) ?? []);
+        const [productsRes, categoriesRes] = await Promise.all([
+          supabase.from("products").select("*").eq("restaurant_id", RESTAURANT_ID).order("name"),
+          supabase.from("categories").select("*").order("sort_order")
+        ]);
+        
+        if (!productsRes.error) {
+          setProducts((productsRes.data as Product[]) ?? []);
+        }
+        if (!categoriesRes.error) {
+          setCategories((categoriesRes.data as CategoryItem[]) ?? []);
         }
     } finally {
         setLoading(false);
@@ -192,6 +196,7 @@ export default function AdminProductsPage() {
             <h2 className="text-2xl font-black mb-8">{editing === "new" ? t.admin.addProduct : `${t.admin.editProduct}: ${editing.name}`}</h2>
             <ProductForm
               product={editing === "new" ? undefined : editing}
+              categories={categories}
               onSuccess={() => {
                 setEditing(null);
                 load();

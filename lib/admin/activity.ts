@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/client";
 
 export type AdminAction = 'create' | 'update' | 'delete' | 'login' | 'status_change' | 'print';
-export type AdminEntityType = 'product' | 'order' | 'auth';
+export type AdminEntityType = 'order' | 'product' | 'category' | 'auth' | 'system' | 'settings';
 
 /**
  * LOG ADMIN ACTION

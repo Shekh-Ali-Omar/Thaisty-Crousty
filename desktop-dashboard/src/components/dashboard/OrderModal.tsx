@@ -7,6 +7,7 @@ import { useLocale } from '@/components/locale-provider';
 import { supabase } from '@/desktop-dashboard/src/lib/supabase';
 import { useSettingsStore } from '../../store/settingsStore';
 import { toast } from 'sonner';
+import { logAction } from '@/lib/admin/activity';
 
 interface OrderModalProps {
   order: (Order & { order_items: OrderItem[] }) | null;
@@ -27,6 +28,7 @@ export function OrderModal({ order, onClose, onUpdate }: OrderModalProps) {
   const updateStatus = async (status: OrderStatus) => {
     const { error } = await supabase.from('orders').update({ status }).eq('id', order.id);
     if (!error) {
+      await logAction('status_change', 'order', order.id, `Order ${order.order_number} status updated to ${status}`);
       toast.success(`Order status updated to ${status}`);
       onUpdate();
     } else {

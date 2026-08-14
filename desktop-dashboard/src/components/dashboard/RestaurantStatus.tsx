@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { isRestaurantOpen } from '@/lib/restaurant-status';
 import { Label } from '@/components/ui/label';
+import { logAction } from '@/lib/admin/activity';
 
 export function RestaurantStatusModule() {
   const { t } = useLocale();
@@ -55,6 +56,7 @@ export function RestaurantStatusModule() {
       console.error("Error creating default restaurant settings:", error);
       toast.error("Failed to create default settings.");
     } else {
+      await logAction('create', 'auth', data.id, 'Default restaurant settings created');
       setSettings(data);
       toast.success("Default restaurant settings created.");
     }
@@ -99,6 +101,7 @@ export function RestaurantStatusModule() {
       console.error("Error saving restaurant settings:", error);
       toast.error("Failed to save settings.");
     } else {
+      await logAction('update', 'auth', settings.id, `Restaurant settings updated: ${JSON.stringify(updatedFields)}`);
       setSettings(data);
       toast.success("Restaurant settings saved successfully.");
     }

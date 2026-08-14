@@ -19,8 +19,7 @@ import { logAction } from "@/lib/admin/activity";
 import { GlassCard } from "@/components/glass/GlassCard";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/locale-provider";
-
-const ADMIN_CATEGORIES = ["crousty", "spicy", "sweet", "drink"] as const;
+import type { CategoryItem } from "@/lib/types";
 
 const productSchema = z.object({
   name_en: z.string().min(2, "English name is required"),
@@ -42,12 +41,13 @@ type ProductFormValues = z.infer<typeof productSchema>;
 
 type Props = {
   product?: Product;
+  categories: CategoryItem[];
   onSuccess: () => void;
   onCancel: () => void;
 };
 
-export function ProductForm({ product, onSuccess, onCancel }: Props) {
-  const { t } = useLocale();
+export function ProductForm({ product, categories, onSuccess, onCancel }: Props) {
+  const { t, locale } = useLocale();
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState<string[]>(product?.images || (product?.image ? [product.image] : []));
   const [mainImage, setMainImage] = useState<string | null>(product?.image || null);
@@ -290,9 +290,14 @@ export function ProductForm({ product, onSuccess, onCancel }: Props) {
           <div className="space-y-2">
             <Label className="text-[10px] font-black uppercase tracking-widest text-muted ms-1">{t.admin.category}</Label>
             <Select {...register("category")} className="glass h-11">
-              {ADMIN_CATEGORIES.map((c) => (
-                <option key={c} value={c}>{c.toUpperCase()}</option>
+              {categories.map((c) => (
+                <option key={c.slug} value={c.slug}>
+                  {locale === "ar" ? c.name_ar || c.name_en : locale === "fr" ? c.name_fr || c.name_en : c.name_en}
+                </option>
               ))}
+              {categories.length === 0 && (
+                <option value="crousty">Crousty (Default)</option>
+              )}
             </Select>
           </div>
         </section>

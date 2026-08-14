@@ -9,12 +9,15 @@ import { useLocale } from "@/components/locale-provider";
 import { Input } from "@/components/ui/input";
 import type { Product } from "@/lib/types";
 import { fetchProducts } from "@/lib/products/fetch";
+import { fetchCategories } from "@/lib/categories/fetch";
+import type { CategoryItem } from "@/lib/types";
 
 export function MenuContent() {
   const { t, locale } = useLocale();
   const searchParams = useSearchParams();
 
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState(
     searchParams.get("category") ?? "all"
@@ -27,8 +30,14 @@ export function MenuContent() {
   }, [searchParams]);
 
   useEffect(() => {
-    fetchProducts(locale)
-      .then(setProducts)
+    Promise.all([
+      fetchProducts(locale),
+      fetchCategories()
+    ])
+      .then(([fetchedProducts, fetchedCategories]) => {
+        setProducts(fetchedProducts);
+        setCategories(fetchedCategories);
+      })
       .finally(() => setLoading(false));
   }, [locale]);
 
@@ -60,7 +69,7 @@ export function MenuContent() {
       {/* Sticky Categories Bar */}
       <div className="sticky top-[68px] z-30 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-[#1a1a1a]">
         <div className="px-4 py-3 md:px-8 w-full mx-auto flex items-center justify-between gap-4">
-          <CategoryFilter active={category} onChange={setCategory} />
+          <CategoryFilter active={category} onChange={setCategory} categories={categories} />
           
           <div className="relative hidden md:block w-72 shrink-0">
              <Search className="absolute start-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white rtl:-scale-x-100" />
@@ -92,7 +101,7 @@ export function MenuContent() {
             {category === "all" ? (
               locale === "ar" ? (<>الأكثر <span className="text-[#F58220]">مبيعاً</span></>) : locale === "fr" ? (<>MEILLEURES <span className="text-[#F58220]">VENTES</span></>) : (<>BEST <span className="text-[#F58220]">SELLERS</span></>)
             ) : (
-              (t.menu.categories as any)[category] || category
+              categories.find(c => c.slug === category)?.[locale === "ar" ? "name_ar" : locale === "fr" ? "name_fr" : "name_en"] || category
             )}
           </h2>
           <span className="t-kicker text-[#F58220] px-4 py-2 border border-[#1a1a1a] self-start md:self-auto">

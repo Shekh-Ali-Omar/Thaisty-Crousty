@@ -1,29 +1,42 @@
 "use client";
 
-import { CATEGORIES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/components/locale-provider";
 import { motion } from "framer-motion";
+import type { CategoryItem } from "@/lib/types";
 
 type Props = {
   active: string;
   onChange: (category: string) => void;
+  categories?: CategoryItem[];
 };
 
-export function CategoryFilter({ active, onChange }: Props) {
-  const { t } = useLocale();
+export function CategoryFilter({ active, onChange, categories = [] }: Props) {
+  const { t, locale } = useLocale();
+  
+  // Base 'All' category
+  const allCategory = {
+    slug: "all",
+    label: (t.menu.categories as Record<string, string>)?.all || "All",
+  };
+
+  const dynamicCategories = categories.map(cat => ({
+    slug: cat.slug,
+    label: locale === "ar" ? (cat.name_ar || cat.name_en) : locale === "fr" ? (cat.name_fr || cat.name_en) : cat.name_en
+  }));
+
+  const displayCategories = [allCategory, ...dynamicCategories];
 
   return (
     <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none snap-x snap-mandatory">
-      {CATEGORIES.map((cat) => {
-        const isActive = active === cat;
-        const label = (t.menu.categories as Record<string, string>)[cat] || cat;
+      {displayCategories.map(({ slug, label }) => {
+        const isActive = active === slug;
 
         return (
           <button
-            key={cat}
+            key={slug}
             type="button"
-            onClick={() => onChange(cat)}
+            onClick={() => onChange(slug)}
             className={cn(
               "t-btn-quiet shrink-0 snap-center relative transition-colors duration-200",
               isActive
