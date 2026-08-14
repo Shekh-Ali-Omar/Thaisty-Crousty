@@ -503,7 +503,7 @@ export default function App() {
                                     };
                                     
                                     try {
-                                        const { PrintEngine } = await import('@/lib/printing/PrintEngine');
+                                        const { PrintEngine } = await import('./lib/printing/PrintEngine');
                                         const driver = PrintEngine.getInstance().getActiveDriver();
                                         const res = await driver.print({
                                           order: testOrder as any,

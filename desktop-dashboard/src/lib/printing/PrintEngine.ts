@@ -1,5 +1,5 @@
 import { supabase } from '../supabase';
-import { useSettingsStore, PrinterBackendType } from '@/store/settingsStore';
+import { useSettingsStore, PrinterBackendType } from '../../store/settingsStore';
 import type { Order, OrderItem } from '@/lib/types';
 import type { IPrintDriver, PrintResult, PrintHistoryEntry } from './drivers/IPrintDriver';
 import { WindowsPrintDriver } from './drivers/WindowsPrintDriver';

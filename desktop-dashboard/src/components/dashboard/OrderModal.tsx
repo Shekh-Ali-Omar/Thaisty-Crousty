@@ -38,7 +38,7 @@ export function OrderModal({ order, onClose, onUpdate }: OrderModalProps) {
 
   const manualPrint = async () => {
     try {
-        const { PrintEngine } = await import('@/lib/printing/PrintEngine');
+        const { PrintEngine } = await import('../../lib/printing/PrintEngine');
         const result = await PrintEngine.getInstance().submitPrintJob(order);
         
         if (result && result.success) {
