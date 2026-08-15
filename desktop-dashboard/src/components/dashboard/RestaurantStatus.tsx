@@ -190,6 +190,7 @@ export function RestaurantStatusModule() {
             disabled={saving}
           />
         </div>
+        {!settings.manual_override && (
           <>
             <div className="flex items-center justify-between">
               <Label htmlFor="opening-time" className="text-lg font-bold text-white/80">Opening Time</Label>

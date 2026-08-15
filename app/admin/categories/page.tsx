@@ -16,7 +16,7 @@ export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [newCategory, setNewCategory] = useState({ id: "", name_en: "", name_fr: "", name_ar: "", sort_order: 0 });
+  const [newCategory, setNewCategory] = useState({ slug: "", name_en: "", name_fr: "", name_ar: "", sort_order: 0 });
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -36,7 +36,7 @@ export default function AdminCategoriesPage() {
   }, [load]);
 
   const handleAdd = async () => {
-    if (!newCategory.id || !newCategory.name_en || !newCategory.name_fr || !newCategory.name_ar) {
+    if (!newCategory.slug || !newCategory.name_en || !newCategory.name_fr || !newCategory.name_ar) {
       toast.error("Please fill all fields.");
       return;
     }
@@ -48,7 +48,8 @@ export default function AdminCategoriesPage() {
     const sort_order = categories.length > 0 ? Math.max(...categories.map(c => c.sort_order)) + 1 : 1;
 
     const { data, error } = await supabase.from("categories").insert({
-      id: newCategory.id.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
+      restaurant_id: "00000000-0000-0000-0000-000000000001",
+      slug: newCategory.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
       name_en: newCategory.name_en,
       name_fr: newCategory.name_fr,
       name_ar: newCategory.name_ar,
@@ -60,29 +61,29 @@ export default function AdminCategoriesPage() {
     } else if (data) {
       toast.success("Category created!");
       setCategories([...categories, data as CategoryItem]);
-      setNewCategory({ id: "", name_en: "", name_fr: "", name_ar: "", sort_order: 0 });
+      setNewCategory({ slug: "", name_en: "", name_fr: "", name_ar: "", sort_order: 0 });
       // Log action
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        await logAction('create', 'category', data.id, `Created category: ${data.id}`);
+        await logAction('create', 'category', data.slug, `Created category: ${data.slug}`);
       }
     }
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (slug: string) => {
     if (!confirm("Are you sure you want to delete this category?")) return;
     
     const supabase = createClient();
-    const { error } = await supabase.from("categories").delete().eq("id", id);
+    const { error } = await supabase.from("categories").delete().eq("slug", slug);
     if (error) {
       toast.error("Error deleting category: " + error.message);
     } else {
       toast.success("Category deleted.");
-      setCategories(categories.filter(c => c.id !== id));
+      setCategories(categories.filter(c => c.slug !== slug));
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        await logAction('delete', 'category', id, `Deleted category: ${id}`);
+        await logAction('delete', 'category', slug, `Deleted category: ${slug}`);
       }
     }
   };
@@ -106,7 +107,7 @@ export default function AdminCategoriesPage() {
     // Persist to DB
     const supabase = createClient();
     for (const cat of updated) {
-      await supabase.from("categories").update({ sort_order: cat.sort_order }).eq("id", cat.id);
+      await supabase.from("categories").update({ sort_order: cat.sort_order }).eq("slug", cat.slug);
     }
   };
 
@@ -135,7 +136,7 @@ export default function AdminCategoriesPage() {
                     <button onClick={() => handleMove(i, 'down')} disabled={i === categories.length - 1} className="hover:text-primary disabled:opacity-30">▼</button>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg">{cat.id}</h3>
+                    <h3 className="font-bold text-lg">{cat.slug}</h3>
                     <div className="flex gap-4 text-xs text-muted mt-1">
                       <span>EN: {cat.name_en}</span>
                       <span>FR: {cat.name_fr}</span>
@@ -143,7 +144,7 @@ export default function AdminCategoriesPage() {
                     </div>
                   </div>
                 </div>
-                <Button size="icon" variant="glass" className="h-10 w-10 text-red-400 shrink-0" onClick={() => handleDelete(cat.id)}>
+                <Button size="icon" variant="glass" className="h-10 w-10 text-red-400 shrink-0" onClick={() => handleDelete(cat.slug)}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </GlassCard>
@@ -155,11 +156,11 @@ export default function AdminCategoriesPage() {
               <h3 className="text-xl font-black">New Category</h3>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-white/80 uppercase">ID (Internal)</label>
+                  <label className="text-xs font-bold text-white/80 uppercase">Slug (Internal)</label>
                   <input
                     type="text"
-                    value={newCategory.id}
-                    onChange={e => setNewCategory({...newCategory, id: e.target.value})}
+                    value={newCategory.slug}
+                    onChange={e => setNewCategory({...newCategory, slug: e.target.value})}
                     placeholder="e.g. burgers"
                     className="w-full bg-white/5 text-white p-3 rounded-xl border border-white/10"
                   />

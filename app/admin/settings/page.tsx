@@ -10,6 +10,7 @@ import { isRestaurantOpen } from '@/lib/restaurant-status';
 import { Label } from '@/components/ui/label';
 import { AdminNav } from '@/components/admin/AdminNav';
 import { GlassCard } from '@/components/glass/GlassCard';
+import { logAction } from '@/lib/admin/activity';
 
 export default function AdminSettingsPage() {
   const { t } = useLocale();
@@ -107,6 +108,23 @@ export default function AdminSettingsPage() {
       setError("Failed to save settings.");
     } else {
       setSettings(data);
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        let actionDesc = "Updated restaurant settings.";
+        if (updatedFields.manual_override !== undefined) {
+          if (updatedFields.manual_override === false) {
+             actionDesc = "Resumed automatic restaurant schedule.";
+          } else if (updatedFields.forced_closed) {
+             actionDesc = "Manually FORCED CLOSED the restaurant.";
+          } else {
+             actionDesc = "Manually FORCED OPEN the restaurant.";
+          }
+        } else if (updatedFields.opening_time || updatedFields.closing_time) {
+          actionDesc = `Changed operating hours (Open: ${updatedFields.opening_time || settings.opening_time}, Close: ${updatedFields.closing_time || settings.closing_time}).`;
+        }
+        await logAction('update', 'settings', settings.id, actionDesc);
+      }
     }
     setSaving(false);
   };

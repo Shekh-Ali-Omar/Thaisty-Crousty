@@ -89,6 +89,14 @@ export default function AdminProductsPage() {
   const toggleVisibility = async (id: string, current: boolean) => {
     const supabase = createClient();
     await supabase.from("products").update({ is_available: !current }).eq("id", id);
+    
+    const product = products.find(p => p.id === id);
+    if (product) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            await logAction('update', 'product', id, `Toggled visibility to ${!current ? 'available' : 'unavailable'} for product: ${product.name}`);
+        }
+    }
     load();
   };
 
